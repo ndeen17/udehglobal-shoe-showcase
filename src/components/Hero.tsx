@@ -8,20 +8,20 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-[90vh] bg-background text-foreground">
-      {/* Small Logo in Top-Left Corner */}
-      <div className="absolute top-6 left-6 z-10">
-        <img
-          src={logo}
-          alt="UdehGlobal logo"
-          className="h-20 md:h-24 lg:h-28 xl:h-32 w-auto object-contain opacity-90"
-        />
-      </div>
-
       {/* Main Content Container */}
       <div className="flex items-center justify-center min-h-[90vh] px-8 md:px-16 lg:px-20">
         <div className="w-full max-w-4xl text-center animate-fade-in">
           {/* Central Text Block */}
-          <div className="space-y-6 md:space-y-8">
+          <div className="space-y-8 md:space-y-12">
+            {/* Large Logo above brand name */}
+            <div className="flex justify-center mb-6">
+              <img
+                src={logo}
+                alt="UdehGlobal logo"
+                className="h-32 md:h-40 lg:h-48 xl:h-56 w-auto object-contain drop-shadow-lg"
+              />
+            </div>
+            
             {/* Brand Name - Largest */}
             <h1 className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-gray-800 tracking-[0.15em] leading-none" 
                 style={{ fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif' }}>
