@@ -7,43 +7,51 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-[90vh] flex items-center bg-background text-foreground">
-      <div className="container mx-auto px-4">
-        <div className="max-w-5xl animate-fade-in">
-          {/* Left-aligned Logo and Brand Section */}
-          <div className="flex flex-col items-start space-y-8">
-            {/* Large Logo */}
-            <div className="mb-4">
-              <img
-                src={logo}
-                alt="UdehGlobal logo"
-                className="h-48 md:h-60 lg:h-72 xl:h-80 w-auto object-contain drop-shadow-lg"
-              />
-            </div>
+    <section className="relative min-h-[90vh] bg-background text-foreground">
+      {/* Small Logo in Top-Left Corner */}
+      <div className="absolute top-6 left-6 z-10">
+        <img
+          src={logo}
+          alt="UdehGlobal logo"
+          className="h-12 md:h-16 w-auto object-contain opacity-80"
+        />
+      </div>
+
+      {/* Main Content Container */}
+      <div className="flex items-center justify-start min-h-[90vh] pl-8 md:pl-16 lg:pl-20">
+        <div className="w-full max-w-[70%] animate-fade-in">
+          {/* Central Text Block */}
+          <div className="space-y-6 md:space-y-8">
+            {/* Brand Name - Largest */}
+            <h1 className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-gray-800 tracking-[0.15em] leading-none" 
+                style={{ fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif' }}>
+              UDEH GLOBAL
+            </h1>
             
-            {/* Company Name - Bold and directly under logo */}
-            <div className="space-y-6">
-              <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-[0.05em] text-foreground leading-none">
-                UDEH GLOBAL
-              </h1>
-              
-              {/* Tagline */}
-              <p className="text-xl md:text-2xl lg:text-3xl text-muted-foreground font-light tracking-wide">
-                Premium Comfort Slides
-              </p>
-              
-              {/* CTA Button */}
-              <div className="pt-6">
-                <Button 
-                  size="lg" 
-                  onClick={scrollToProducts}
-                  variant="outline"
-                  className="px-12 py-6 text-base font-light tracking-widest border-foreground/20 hover:border-foreground/40 hover:bg-transparent"
-                >
-                  EXPLORE
-                </Button>
-              </div>
-            </div>
+            {/* Main Headline */}
+            <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-light text-gray-700 tracking-[0.1em] leading-tight"
+                style={{ fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif' }}>
+              The Art of Effortless Comfort
+            </h2>
+            
+            {/* Sub-Headline / Product Category */}
+            <h3 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-light text-gray-500 tracking-[0.08em] leading-relaxed"
+                style={{ fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif' }}>
+              Premium Comfort Slides
+            </h3>
+          </div>
+
+          {/* CTA Button */}
+          <div className="mt-12 md:mt-16">
+            <Button 
+              size="lg" 
+              onClick={scrollToProducts}
+              variant="outline"
+              className="px-8 py-4 text-sm font-light tracking-[0.2em] border-gray-400 hover:border-gray-600 hover:bg-transparent text-gray-700 hover:text-gray-900"
+              style={{ fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif' }}
+            >
+              EXPLORE
+            </Button>
           </div>
         </div>
       </div>
