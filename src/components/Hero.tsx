@@ -13,7 +13,7 @@ const Hero = () => {
         <img
           src={logo}
           alt="UdehGlobal logo"
-          className="h-12 md:h-16 w-auto object-contain opacity-80"
+          className="h-20 md:h-24 lg:h-28 xl:h-32 w-auto object-contain opacity-90"
         />
       </div>
 
