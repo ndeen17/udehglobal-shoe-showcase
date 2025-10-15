@@ -1,48 +1,38 @@
 const features = [
   {
-    icon: "✨",
     title: "Premium Quality",
-    description: "Made with high-quality materials for long-lasting comfort and durability"
+    description: "Crafted with exceptional materials for lasting comfort"
   },
   {
-    icon: "🎯",
     title: "Perfect Fit",
-    description: "Ergonomically designed to provide the perfect fit for all-day wear"
+    description: "Ergonomically designed for all-day wear"
   },
   {
-    icon: "💎",
     title: "Stylish Design",
-    description: "Modern and versatile designs that complement any casual outfit"
+    description: "Timeless aesthetics that elevate any look"
   },
   {
-    icon: "🚀",
     title: "Fast Delivery",
-    description: "Quick and reliable shipping to get your slides to you as soon as possible"
+    description: "Swift and reliable nationwide shipping"
   }
 ];
 
 const FeaturesSection = () => {
   return (
-    <section className="py-20 bg-secondary/30">
+    <section className="py-24 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 space-y-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground">Why Choose Us</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Experience the perfect blend of comfort, quality, and style
-          </p>
+        <div className="text-center mb-20 space-y-6">
+          <h2 className="text-3xl md:text-4xl font-light tracking-[0.15em] text-foreground">EXCELLENCE</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="text-center p-8 rounded-2xl bg-card border border-border/50 hover:border-accent/50 transition-all duration-300 hover:shadow-elegant group"
+              className="text-center p-8 space-y-3"
             >
-              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                {feature.icon}
-              </div>
-              <h3 className="text-xl font-semibold mb-3 text-foreground">{feature.title}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
+              <h3 className="text-lg font-medium text-foreground tracking-wide">{feature.title}</h3>
+              <p className="text-sm text-muted-foreground font-light leading-relaxed">{feature.description}</p>
             </div>
           ))}
         </div>
