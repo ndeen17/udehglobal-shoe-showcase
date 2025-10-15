@@ -14,7 +14,7 @@ const Hero = () => {
           {/* Central Text Block */}
           <div className="space-y-8 md:space-y-12">
             {/* Large Logo above brand name */}
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-2">
               <img
                 src={logo}
                 alt="UdehGlobal logo"
