@@ -19,11 +19,8 @@ const ProductsSection = () => {
   return (
     <section id="products" className="py-20 bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 space-y-4 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground">Our Collection</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Discover premium quality slides designed for ultimate comfort and style
-          </p>
+        <div className="text-center mb-20 space-y-6">
+          <h2 className="text-3xl md:text-4xl font-light tracking-[0.15em] text-foreground">COLLECTION</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-in">

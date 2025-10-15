@@ -1,38 +1,21 @@
-import logo from "@/assets/logo.png";
-
 const Footer = () => {
   return (
-    <footer className="bg-primary text-primary-foreground py-12">
+    <footer className="bg-background border-t border-border/30 py-16">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div className="max-w-4xl mx-auto text-center space-y-8">
           <div className="space-y-4">
-            <img src={logo} alt="UdehGlobal Logo" className="h-16 object-contain" />
-            <p className="text-primary-foreground/80">
-              Your trusted source for premium comfort slides
+            <h3 className="text-sm font-light tracking-[0.3em] text-foreground/60">CONTACT</h3>
+            <div className="space-y-2 text-sm font-light text-muted-foreground">
+              <p>info@udehglobal.com</p>
+              <p>Nigeria</p>
+            </div>
+          </div>
+          
+          <div className="pt-8 border-t border-border/30">
+            <p className="text-xs font-light tracking-wider text-muted-foreground/60">
+              © {new Date().getFullYear()} UDEHGLOBAL
             </p>
           </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-primary-foreground/80">
-              <li><a href="#products" className="hover:text-accent transition-colors">Products</a></li>
-              <li><a href="#" className="hover:text-accent transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-accent transition-colors">Contact</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-            <ul className="space-y-2 text-primary-foreground/80">
-              <li>📧 info@udehglobal.com</li>
-              <li>📱 +234 XXX XXX XXXX</li>
-              <li>📍 Nigeria</li>
-            </ul>
-          </div>
-        </div>
-        
-        <div className="border-t border-primary-foreground/20 pt-8 text-center text-primary-foreground/60">
-          <p>&copy; {new Date().getFullYear()} UdehGlobal. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -11,7 +11,7 @@ const Hero = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center space-y-12 animate-fade-in">
           <div className="flex justify-center mb-8">
-            <img src={logo} alt="UdehGlobal" className="h-32 md:h-40 object-contain" />
+            <img src={logo} alt="UdehGlobal" className="h-16 md:h-20 object-contain" />
           </div>
           
           <h1 className="text-6xl md:text-8xl font-light tracking-[0.2em] text-foreground">
