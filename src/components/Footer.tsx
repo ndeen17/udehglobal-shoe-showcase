@@ -6,7 +6,7 @@ const Footer = () => {
           <div className="space-y-3 sm:space-y-4">
             <h3 className="text-xs sm:text-sm font-light tracking-[0.25em] sm:tracking-[0.3em] text-foreground/60">CONTACT</h3>
             <div className="space-y-1 sm:space-y-2 text-xs sm:text-sm font-light text-muted-foreground">
-              <p>info@udehglobal.com</p>
+              <p>shop@udehglobal.com</p>
               <p>Nigeria</p>
             </div>
           </div>
