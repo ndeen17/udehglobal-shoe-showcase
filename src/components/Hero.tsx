@@ -18,8 +18,8 @@ const Hero = () => {
       </div>
 
       {/* Main Content Container */}
-      <div className="flex items-center justify-start min-h-[90vh] pl-8 md:pl-16 lg:pl-20">
-        <div className="w-full max-w-[70%] animate-fade-in">
+      <div className="flex items-center justify-center min-h-[90vh] px-8 md:px-16 lg:px-20">
+        <div className="w-full max-w-4xl text-center animate-fade-in">
           {/* Central Text Block */}
           <div className="space-y-6 md:space-y-8">
             {/* Brand Name - Largest */}
