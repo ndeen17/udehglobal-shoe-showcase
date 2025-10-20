@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import artwork from "@/assets/artwork-2.jpg";
+import artwork from "@/assets/artwork-7.jpg";
 
 const ArtworkPreview = () => {
   return (
@@ -13,6 +13,7 @@ const ArtworkPreview = () => {
             <p className="text-sm sm:text-base text-muted-foreground font-light leading-relaxed max-w-md">
               Curated collection of contemporary art pieces to elevate your space
             </p>
+            <span className="block text-lg sm:text-xl md:text-2xl font-light text-foreground/80">₦700,000</span>
             <Link 
               to="/artwork"
               className="inline-block text-xs sm:text-sm tracking-[0.2em] text-foreground border-b border-foreground/30 hover:border-foreground transition-all pb-1"
