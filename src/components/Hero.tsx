@@ -7,7 +7,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-[90vh] bg-background text-foreground">
+    <section className="relative min-h-[90vh] bg-background text-foreground pt-16 sm:pt-20">
       {/* Main Content Container */}
       <div className="flex items-center justify-center min-h-[90vh] px-4 sm:px-6 md:px-8 lg:px-16 xl:px-20">
         <div className="w-full max-w-5xl text-center animate-fade-in">
