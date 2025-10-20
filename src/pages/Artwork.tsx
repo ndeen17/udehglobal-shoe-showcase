@@ -8,15 +8,19 @@ import artwork4 from "@/assets/artwork-4.jpg";
 import artwork5 from "@/assets/artwork-5.jpg";
 import artwork6 from "@/assets/artwork-6.jpg";
 import artwork7 from "@/assets/artwork-7.jpg";
+import artwork8 from "@/assets/artwork-8.jpg";
+import artwork9 from "@/assets/artwork-9.jpg";
 
 const artworks = [
-  { id: 1, image: artwork1, title: "Abstract Composition I" },
-  { id: 2, image: artwork2, title: "Portrait Series" },
-  { id: 3, image: artwork3, title: "Nature Study" },
-  { id: 4, image: artwork4, title: "Urban Abstract" },
-  { id: 5, image: artwork5, title: "Circular Motion" },
-  { id: 6, image: artwork6, title: "Contrast Study" },
-  { id: 7, image: artwork7, title: "Geometric Expression" },
+  { id: 1, image: artwork1, title: "Abstract Composition I", price: "₦700,000" },
+  { id: 2, image: artwork2, title: "Portrait Series", price: "₦700,000" },
+  { id: 3, image: artwork3, title: "Nature Study", price: "₦700,000" },
+  { id: 4, image: artwork4, title: "Urban Abstract", price: "₦700,000" },
+  { id: 5, image: artwork5, title: "Circular Motion", price: "₦700,000" },
+  { id: 6, image: artwork6, title: "Contrast Study", price: "₦700,000" },
+  { id: 7, image: artwork7, title: "Geometric Expression", price: "₦700,000" },
+  { id: 8, image: artwork8, title: "Contemporary Fashion", price: "₦700,000" },
+  { id: 9, image: artwork9, title: "Desert Landscape", price: "₦700,000" },
 ];
 
 const Artwork = () => {
@@ -42,6 +46,7 @@ const Artwork = () => {
                   key={artwork.id}
                   image={artwork.image}
                   title={artwork.title}
+                  price={artwork.price}
                 />
               ))}
             </div>
