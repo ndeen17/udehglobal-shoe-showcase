@@ -8,40 +8,39 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 10%;
+    /* Yeezy Brutalist Monochromatic Palette */
+    --background: 0 0% 100%;          /* Pure white background */
+    --foreground: 0 0% 8%;            /* Near black text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
+    --card: 0 0% 100%;                /* White cards, no borders */
+    --card-foreground: 0 0% 8%;       /* Dark text on cards */
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
+    --popover-foreground: 0 0% 8%;
 
-    --primary: 0 0% 10%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 0 0% 8%;               /* Dark primary */
+    --primary-foreground: 0 0% 100%;  /* White on dark */
 
-    --secondary: 0 0% 97%;
-    --secondary-foreground: 0 0% 10%;
+    --secondary: 0 0% 98%;            /* Off-white secondary */
+    --secondary-foreground: 0 0% 8%;  /* Dark text */
 
-    --muted: 0 0% 97%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 0 0% 96%;                /* Very light gray */
+    --muted-foreground: 0 0% 25%;     /* Medium gray text */
 
-    --accent: 213 94% 28%;
-    --accent-foreground: 0 0% 100%;
+    /* NO ACCENT COLORS - Pure monochromatic */
+    --accent: 0 0% 8%;                /* Dark accent */
+    --accent-foreground: 0 0% 100%;   /* White on dark */
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 0% 15%;          /* Dark destructive */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 92%;
-    --input: 0 0% 92%;
-    --ring: 0 0% 10%;
+    --border: 0 0% 100%;              /* Invisible borders */
+    --input: 0 0% 98%;                /* Minimal input styling */
+    --ring: 0 0% 8%;                  /* Dark focus ring */
 
-    --radius: 0rem;
+    --radius: 0rem;                   /* No border radius - brutalist */
 
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 100%), hsl(0 0% 98%));
-    --gradient-accent: linear-gradient(135deg, hsl(213 94% 28%), hsl(213 94% 35%));
-    --shadow-elegant: 0 1px 3px 0 hsl(0 0% 0% / 0.05);
-    --shadow-accent: 0 1px 3px 0 hsl(213 94% 28% / 0.1);
+    /* Remove all gradients and shadows - pure brutalist */
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -54,38 +53,37 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 0 0% 10%;
-    --foreground: 0 0% 95%;
+    /* Dark mode also monochromatic */
+    --background: 0 0% 8%;            /* Dark background */
+    --foreground: 0 0% 95%;           /* Light text */
 
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 8%;                 /* Dark cards */
+    --card-foreground: 0 0% 95%;     /* Light text on cards */
 
-    --popover: 0 0% 10%;
+    --popover: 0 0% 8%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 0 0% 95%;
-    --primary-foreground: 0 0% 10%;
+    --primary: 0 0% 95%;             /* Light primary in dark mode */
+    --primary-foreground: 0 0% 8%;   /* Dark text on light */
 
-    --secondary: 0 0% 15%;
+    --secondary: 0 0% 12%;           /* Slightly lighter dark */
     --secondary-foreground: 0 0% 95%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 0 0% 15%;               /* Dark muted */
+    --muted-foreground: 0 0% 60%;    /* Medium gray text */
 
-    --accent: 213 94% 28%;
-    --accent-foreground: 0 0% 95%;
+    /* NO ACCENT COLORS in dark mode either */
+    --accent: 0 0% 95%;              /* Light accent */
+    --accent-foreground: 0 0% 8%;    /* Dark on light */
 
-    --destructive: 0 62% 30%;
+    --destructive: 0 0% 20%;         /* Dark destructive */
     --destructive-foreground: 0 0% 95%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 0% 80%;
+    --border: 0 0% 8%;               /* Invisible borders */
+    --input: 0 0% 12%;               /* Minimal input styling */
+    --ring: 0 0% 80%;                /* Light focus ring */
 
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 10%), hsl(0 0% 12%));
-    --gradient-accent: linear-gradient(135deg, hsl(213 94% 20%), hsl(213 94% 28%));
-    --shadow-elegant: 0 1px 3px 0 hsl(0 0% 0% / 0.2);
-    --shadow-accent: 0 1px 3px 0 hsl(213 94% 28% / 0.15);
+    /* Remove all gradients and shadows in dark mode too */
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -105,5 +103,43 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    /* Yeezy Brutalist Typography */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+  }
+}
+
+/* Yeezy Brutalist Typography System */
+@layer components {
+  .brutalist-text {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  
+  .brutalist-heading {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 200;
+    letter-spacing: 0.15em;
+    line-height: 0.9;
+    text-transform: uppercase;
+  }
+  
+  .brutalist-subheading {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+  }
+  
+  .brutalist-body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    text-transform: uppercase;
   }
 }

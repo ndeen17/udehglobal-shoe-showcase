@@ -63,6 +63,26 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontFamily: {
+        'brutalist': ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', '"Roboto"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+      },
+      fontSize: {
+        'brutalist-xs': ['0.65rem', { lineHeight: '1', letterSpacing: '0.1em' }],
+        'brutalist-sm': ['0.75rem', { lineHeight: '1.1', letterSpacing: '0.08em' }],
+        'brutalist-base': ['0.875rem', { lineHeight: '1.2', letterSpacing: '0.05em' }],
+        'brutalist-lg': ['1rem', { lineHeight: '1', letterSpacing: '0.1em' }],
+        'brutalist-xl': ['1.25rem', { lineHeight: '0.9', letterSpacing: '0.12em' }],
+        'brutalist-2xl': ['1.75rem', { lineHeight: '0.9', letterSpacing: '0.15em' }],
+        'brutalist-3xl': ['2.5rem', { lineHeight: '0.8', letterSpacing: '0.15em' }],
+      },
+      spacing: {
+        'brutalist-xs': '0.5rem',
+        'brutalist-sm': '1rem',
+        'brutalist-md': '2rem',
+        'brutalist-lg': '4rem',
+        'brutalist-xl': '6rem',
+        'brutalist-2xl': '8rem',
+      },
       keyframes: {
         "accordion-down": {
           from: {

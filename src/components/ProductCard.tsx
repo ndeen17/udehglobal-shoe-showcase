@@ -1,26 +1,48 @@
-import { Card } from "@/components/ui/card";
+import { Link } from 'react-router-dom';
+import { useApp } from '@/contexts/AppContext';
 
 interface ProductCardProps {
+  id: number;
   image: string;
   title: string;
   price: string;
 }
 
-const ProductCard = ({ image, title, price }: ProductCardProps) => {
+const ProductCard = ({ id, image, title, price }: ProductCardProps) => {
+  const { addToCart } = useApp();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation when adding to cart
+    addToCart({ id, image, title, price });
+  };
+
   return (
-    <Card className="group overflow-hidden border-border/30 hover:border-foreground/20 transition-all duration-500 w-full">
-      <div className="aspect-square overflow-hidden bg-secondary">
-        <img 
-          src={image} 
-          alt={title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
+    <Link 
+      to={`/item/${title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}
+      className="block group"
+    >
+      {/* Yeezy-Style Minimal Card */}
+      <div className="bg-background">
+        
+        {/* Image taking maximum space */}
+        <div className="aspect-square overflow-hidden bg-gray-100">
+          <img 
+            src={image} 
+            alt={title}
+            className="w-full h-full object-cover filter grayscale-[20%] contrast-90 brightness-95"
+            loading="lazy"
+          />
+        </div>
+        
+        {/* Minimal Text Label */}
+        <div className="pt-2 pb-4 text-center">
+          <h3 className="brutalist-body text-xs tracking-wider text-foreground">
+            {title.toUpperCase()}
+          </h3>
+        </div>
+        
       </div>
-      <div className="p-4 sm:p-5 md:p-6 space-y-2 sm:space-y-3">
-        <h3 className="text-sm sm:text-base md:text-lg font-medium text-foreground tracking-wide leading-tight">{title}</h3>
-        <span className="text-lg sm:text-xl md:text-xl font-light text-foreground/80">{price}</span>
-      </div>
-    </Card>
+    </Link>
   );
 };
 
