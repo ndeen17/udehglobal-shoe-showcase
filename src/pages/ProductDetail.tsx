@@ -1,31 +1,16 @@
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
-
-// Import your product data
-import product1 from "@/assets/product-1.jpg";
-import product2 from "@/assets/product-2.jpg";
-import product3 from "@/assets/product-3.jpg";
-import product4 from "@/assets/product-4.jpg";
-import product5 from "@/assets/product-5.jpg";
-import product6 from "@/assets/product-6.jpg";
-
-const products = [
-  { id: 1, image: product1, title: "Premium Comfort Slides - Multi Color", price: "₦15,000" },
-  { id: 2, image: product2, title: "Classic Black Slides", price: "₦15,000" },
-  { id: 3, image: product3, title: "Sport White Slides", price: "₦15,000" },
-  { id: 4, image: product4, title: "Navy Blue Comfort Slides", price: "₦15,000" },
-  { id: 5, image: product5, title: "Designer Black Slides", price: "₦15,000" },
-  { id: 6, image: product6, title: "Flip Flop Style Slides", price: "₦15,000" },
-];
+import { getAllProducts } from '@/data/categories';
 
 const ProductDetail = () => {
   const { slug } = useParams();
   const { addToCart } = useApp();
 
-  // Find product by slug
-  const product = products.find(p => 
-    p.title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') === slug
+  // Get all products and find the one matching the slug
+  const allProducts = getAllProducts();
+  const product = allProducts.find(p => 
+    p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') === slug
   );
 
   if (!product) {
@@ -47,7 +32,12 @@ const ProductDetail = () => {
   }
 
   const handleAddToCart = () => {
-    addToCart(product);
+    addToCart({
+      id: product.id,
+      image: product.image,
+      title: product.name,
+      price: product.price
+    });
   };
 
   return (
@@ -73,7 +63,7 @@ const ProductDetail = () => {
             <div className="aspect-square bg-gray-100">
               <img 
                 src={product.image} 
-                alt={product.title}
+                alt={product.name}
                 className="w-full h-full object-cover filter grayscale-[20%] contrast-90 brightness-95"
               />
             </div>
