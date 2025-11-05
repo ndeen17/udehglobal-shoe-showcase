@@ -1,12 +1,12 @@
 import Hero from "@/components/Hero";
-import ProductsSection from "@/components/ProductsSection";
+import ProductCategories from "@/components/ProductCategories";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Hero />
-      <ProductsSection />
-      {/* Removed Features and Footer for Yeezy-style minimalism */}
+      <ProductCategories />
+      {/* Yeezy-style minimalism with product categories */}
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "@/contexts/AppContext";
 import GlobalHeader from "@/components/GlobalHeader";
 import Index from "./pages/Index";
+import CategoryPage from "./pages/CategoryPage";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import About from "./pages/About";
@@ -24,6 +25,7 @@ const App = () => (
           <GlobalHeader />
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/category/:slug" element={<CategoryPage />} />
             <Route path="/item/:slug" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/about" element={<About />} />

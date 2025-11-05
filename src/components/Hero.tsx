@@ -18,7 +18,7 @@ const Hero = () => {
             </h1>
             
             <h2 className="brutalist-subheading text-sm tracking-wider text-gray-500">
-              PREMIUM COMFORT SLIDES
+              PREMIUM LIFESTYLE PRODUCTS
             </h2>
           </div>
 
