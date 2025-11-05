@@ -12,24 +12,24 @@ const Cart = () => {
 
   if (cartCount === 0) {
     return (
-      <div className="min-h-screen bg-background pt-20 px-brutalist-md">
-        <div className="pt-brutalist-md">
+      <div className="min-h-screen bg-background pt-20 px-8">
+        <div className="pt-8">
           <Link 
             to="/"
-            className="inline-flex items-center space-x-2 font-brutalist text-brutalist-sm font-light tracking-wider text-muted-foreground hover:text-foreground transition-colors duration-300"
+            className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300"
           >
             <ArrowLeft className="w-4 h-4" strokeWidth={1} />
             <span>BACK</span>
           </Link>
         </div>
         
-        <div className="text-center pt-brutalist-2xl">
-          <h1 className="font-brutalist text-brutalist-lg font-light tracking-widest text-foreground mb-brutalist-md">
+        <div className="text-center pt-32">
+          <h1 className="brutalist-heading text-lg tracking-widest text-foreground mb-8">
             CART IS EMPTY
           </h1>
           <Link 
             to="/"
-            className="font-brutalist text-brutalist-sm font-light tracking-wider text-muted-foreground hover:text-foreground transition-colors duration-300"
+            className="brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300"
           >
             CONTINUE SHOPPING
           </Link>
@@ -42,10 +42,10 @@ const Cart = () => {
     <div className="min-h-screen bg-background pt-20">
       
       {/* Back Navigation */}
-      <div className="px-brutalist-md pt-brutalist-md">
+      <div className="px-8 pt-8">
         <Link 
           to="/"
-          className="inline-flex items-center space-x-2 font-brutalist text-brutalist-sm font-light tracking-wider text-muted-foreground hover:text-foreground transition-colors duration-300"
+          className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={1} />
           <span>BACK</span>
@@ -53,23 +53,23 @@ const Cart = () => {
       </div>
 
       {/* Cart Content */}
-      <div className="px-brutalist-md py-brutalist-xl">
+      <div className="px-8 py-16">
         <div className="max-w-2xl mx-auto">
           
           {/* Cart Header */}
-          <div className="text-center mb-brutalist-xl">
-            <h1 className="font-brutalist text-brutalist-lg font-light tracking-widest text-foreground">
+          <div className="text-center mb-16">
+            <h1 className="brutalist-heading text-lg tracking-widest text-foreground">
               CART ({cartCount})
             </h1>
           </div>
 
           {/* Cart Items */}
-          <div className="space-y-brutalist-md">
+          <div className="space-y-8">
             {cartItems.map((item) => (
-              <div key={item.id} className="flex items-center space-x-brutalist-md border-t border-muted pt-brutalist-md">
+              <div key={item.id} className="flex items-center space-x-8 border-t border-gray-200 pt-8">
                 
                 {/* Item Image */}
-                <div className="w-20 h-20 bg-secondary flex-shrink-0">
+                <div className="w-20 h-20 bg-gray-100 flex-shrink-0">
                   <img 
                     src={item.image} 
                     alt={item.title}
@@ -78,14 +78,14 @@ const Cart = () => {
                 </div>
 
                 {/* Item Details */}
-                <div className="flex-1 space-y-brutalist-xs">
-                  <h3 className="font-brutalist text-brutalist-sm font-light tracking-wider text-foreground">
+                <div className="flex-1 space-y-2">
+                  <h3 className="brutalist-body text-sm tracking-wider text-foreground">
                     {item.title.toUpperCase()}
                   </h3>
-                  <p className="font-brutalist text-brutalist-xs font-light tracking-wide text-muted-foreground">
+                  <p className="brutalist-body text-xs tracking-wide text-gray-500">
                     QTY: {item.quantity}
                   </p>
-                  <p className="font-brutalist text-brutalist-sm font-light tracking-wide text-foreground">
+                  <p className="brutalist-body text-sm tracking-wide text-foreground">
                     {item.price}
                   </p>
                 </div>
@@ -96,19 +96,19 @@ const Cart = () => {
                   className="p-2 hover:bg-transparent transition-none"
                   aria-label="Remove item"
                 >
-                  <X className="w-4 h-4 text-muted-foreground hover:text-foreground" strokeWidth={1} />
+                  <X className="w-4 h-4 text-gray-500 hover:text-foreground" strokeWidth={1} />
                 </button>
               </div>
             ))}
           </div>
 
           {/* Cart Summary */}
-          <div className="mt-brutalist-xl pt-brutalist-md border-t border-muted">
-            <div className="flex justify-between items-center mb-brutalist-md">
-              <span className="font-brutalist text-brutalist-sm font-light tracking-wider text-foreground">
+          <div className="mt-16 pt-8 border-t border-gray-200">
+            <div className="flex justify-between items-center mb-8">
+              <span className="brutalist-body text-sm tracking-wider text-foreground">
                 TOTAL
               </span>
-              <span className="font-brutalist text-brutalist-lg font-light tracking-wider text-foreground">
+              <span className="brutalist-subheading text-lg tracking-wider text-foreground">
                 ₦{total.toLocaleString()}
               </span>
             </div>
@@ -117,13 +117,13 @@ const Cart = () => {
             <div className="flex justify-between items-center">
               <button 
                 onClick={clearCart}
-                className="font-brutalist text-brutalist-xs font-light tracking-wider text-muted-foreground hover:text-foreground transition-colors duration-300"
+                className="brutalist-body text-xs tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300"
               >
                 CLEAR CART
               </button>
               
               <button 
-                className="font-brutalist text-brutalist-sm font-light tracking-widest text-foreground hover:text-muted-foreground transition-colors duration-300 bg-transparent border-0 p-0"
+                className="brutalist-body text-sm tracking-widest text-foreground hover:text-gray-500 transition-colors duration-300 bg-transparent border-0 p-0"
               >
                 CHECKOUT
               </button>

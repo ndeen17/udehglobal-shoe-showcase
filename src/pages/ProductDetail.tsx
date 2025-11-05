@@ -54,10 +54,10 @@ const ProductDetail = () => {
     <div className="min-h-screen bg-background pt-20">
       
       {/* Back Navigation */}
-      <div className="px-brutalist-md pt-brutalist-md">
+      <div className="px-8 pt-8">
         <Link 
           to="/"
-          className="inline-flex items-center space-x-2 font-brutalist text-brutalist-sm font-light tracking-wider text-muted-foreground hover:text-foreground transition-colors duration-300"
+          className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={1} />
           <span>BACK</span>
@@ -65,12 +65,12 @@ const ProductDetail = () => {
       </div>
 
       {/* Product Detail Content */}
-      <div className="px-brutalist-md py-brutalist-xl">
+      <div className="px-8 py-16">
         <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-brutalist-xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             
             {/* Product Image */}
-            <div className="aspect-square bg-secondary">
+            <div className="aspect-square bg-gray-100">
               <img 
                 src={product.image} 
                 alt={product.title}
@@ -79,36 +79,36 @@ const ProductDetail = () => {
             </div>
 
             {/* Product Info */}
-            <div className="flex flex-col justify-center space-y-brutalist-lg">
+            <div className="flex flex-col justify-center space-y-16">
               
-              <div className="space-y-brutalist-md">
-                <h1 className="font-brutalist text-brutalist-xl font-light tracking-widest text-foreground">
+              <div className="space-y-8">
+                <h1 className="brutalist-heading text-2xl tracking-widest text-foreground">
                   {product.title.toUpperCase()}
                 </h1>
                 
-                <p className="font-brutalist text-brutalist-lg font-light tracking-wider text-foreground">
+                <p className="brutalist-subheading text-lg tracking-wider text-foreground">
                   {product.price}
                 </p>
               </div>
 
               {/* Product Description */}
-              <div className="space-y-brutalist-sm">
-                <p className="font-brutalist text-brutalist-sm font-light tracking-wide text-muted-foreground leading-relaxed">
+              <div className="space-y-4">
+                <p className="brutalist-body text-sm tracking-wide text-gray-500 leading-relaxed">
                   PREMIUM COMFORT DESIGN WITH ERGONOMIC FOOTBED
                 </p>
-                <p className="font-brutalist text-brutalist-sm font-light tracking-wide text-muted-foreground leading-relaxed">
+                <p className="brutalist-body text-sm tracking-wide text-gray-500 leading-relaxed">
                   LIGHTWEIGHT CONSTRUCTION FOR ALL-DAY WEAR
                 </p>
-                <p className="font-brutalist text-brutalist-sm font-light tracking-wide text-muted-foreground leading-relaxed">
+                <p className="brutalist-body text-sm tracking-wide text-gray-500 leading-relaxed">
                   DURABLE MATERIALS AND SUPERIOR CRAFTSMANSHIP
                 </p>
               </div>
 
               {/* Add to Cart */}
-              <div className="pt-brutalist-md">
+              <div className="pt-8">
                 <button 
                   onClick={handleAddToCart}
-                  className="font-brutalist text-brutalist-sm font-light tracking-widest text-foreground hover:text-muted-foreground transition-colors duration-300 bg-transparent border-0 p-0"
+                  className="brutalist-body text-xs tracking-widest text-foreground hover:text-gray-500 transition-colors duration-300 bg-transparent border-0 p-0"
                 >
                   ADD TO CART
                 </button>
