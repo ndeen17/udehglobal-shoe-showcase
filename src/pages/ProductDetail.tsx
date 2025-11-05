@@ -73,7 +73,7 @@ const ProductDetail = () => {
               
               <div className="space-y-8">
                 <h1 className="brutalist-heading text-2xl tracking-widest text-foreground">
-                  {product.title.toUpperCase()}
+                  {product.name.toUpperCase()}
                 </h1>
                 
                 <p className="brutalist-subheading text-lg tracking-wider text-foreground">

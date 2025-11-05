@@ -6,11 +6,11 @@ const ProductCategories = () => {
   const categories = getActiveCategories();
 
   return (
-    <section id="products" className="bg-background py-16">
+    <section id="products" className="bg-background py-8">
       <div className="px-8">
         
         {/* Section Header */}
-        <div className="text-center mb-24">
+        <div className="text-center mb-16">
           <h2 className="brutalist-subheading text-lg tracking-widest text-foreground mb-4">
             CATEGORIES
           </h2>

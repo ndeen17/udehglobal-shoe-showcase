@@ -69,13 +69,22 @@ const CategoryPage = () => {
                   className="block group"
                 >
                   <div className="bg-background">
-                    {/* Product Image Placeholder */}
-                    <div className="aspect-square bg-gray-100 overflow-hidden mb-4 flex items-center justify-center">
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <span className="brutalist-body text-xs text-gray-400 text-center p-4">
-                          {product.name.split(' ').slice(0, 2).join(' ')}
-                        </span>
-                      </div>
+                    {/* Product Image */}
+                    <div className="aspect-square bg-gray-100 overflow-hidden mb-4">
+                      {product.image ? (
+                        <img 
+                          src={product.image} 
+                          alt={product.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                          <span className="brutalist-body text-xs text-gray-400 text-center p-4">
+                            {product.name.split(' ').slice(0, 2).join(' ')}
+                          </span>
+                        </div>
+                      )}
                     </div>
                     
                     {/* Product Info */}

@@ -9,6 +9,21 @@ import {
   LucideIcon
 } from 'lucide-react';
 
+// Import product images
+import product1 from "@/assets/product-1.jpg";
+import product2 from "@/assets/product-2.jpg";
+import product3 from "@/assets/product-3.jpg";
+import product4 from "@/assets/product-4.jpg";
+import product5 from "@/assets/product-5.jpg";
+import product6 from "@/assets/product-6.jpg";
+
+// Import artwork images
+import artwork1 from "@/assets/artwork-1.jpg";
+import artwork2 from "@/assets/artwork-2.jpg";
+import artwork3 from "@/assets/artwork-3.jpg";
+import artwork4 from "@/assets/artwork-4.jpg";
+import artwork5 from "@/assets/artwork-5.jpg";
+
 export interface ProductCategory {
   id: string;
   name: string;
@@ -95,7 +110,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 1, 
       name: "Premium Comfort Slides - Multi Color", 
       price: "₦15,000", 
-      image: "/api/placeholder/300/300",
+      image: product1,
       category: 'shoes',
       description: "Premium comfort design with ergonomic footbed",
       inStock: true
@@ -104,7 +119,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 2, 
       name: "Classic Black Slides", 
       price: "₦15,000", 
-      image: "/api/placeholder/300/300",
+      image: product2,
       category: 'shoes',
       description: "Timeless black design for everyday wear",
       inStock: true
@@ -113,7 +128,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 3, 
       name: "Sport White Slides", 
       price: "₦15,000", 
-      image: "/api/placeholder/300/300",
+      image: product3,
       category: 'shoes',
       description: "Athletic-inspired white slides",
       inStock: true
@@ -122,7 +137,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 4, 
       name: "Navy Blue Comfort Slides", 
       price: "₦15,000", 
-      image: "/api/placeholder/300/300",
+      image: product4,
       category: 'shoes',
       description: "Sophisticated navy blue comfort slides",
       inStock: true
@@ -131,7 +146,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 5, 
       name: "Designer Black Slides", 
       price: "₦15,000", 
-      image: "/api/placeholder/300/300",
+      image: product5,
       category: 'shoes',
       description: "Premium designer black slides",
       inStock: true
@@ -140,7 +155,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 6, 
       name: "Flip Flop Style Slides", 
       price: "₦15,000", 
-      image: "/api/placeholder/300/300",
+      image: product6,
       category: 'shoes',
       description: "Classic flip flop design",
       inStock: true
@@ -151,7 +166,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 101, 
       name: "Abstract Canvas - Blue", 
       price: "₦50,000", 
-      image: "/api/placeholder/300/300",
+      image: artwork1,
       category: 'artworks',
       description: "Modern abstract painting in blue tones",
       inStock: true
@@ -160,7 +175,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 102, 
       name: "Modern Wall Art", 
       price: "₦35,000", 
-      image: "/api/placeholder/300/300",
+      image: artwork2,
       category: 'artworks',
       description: "Contemporary wall art piece",
       inStock: true
@@ -169,9 +184,27 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 103, 
       name: "Minimalist Print", 
       price: "₦25,000", 
-      image: "/api/placeholder/300/300",
+      image: artwork3,
       category: 'artworks',
       description: "Clean minimalist design print",
+      inStock: true
+    },
+    { 
+      id: 104, 
+      name: "Urban Street Art", 
+      price: "₦40,000", 
+      image: artwork4,
+      category: 'artworks',
+      description: "Contemporary urban art piece",
+      inStock: true
+    },
+    { 
+      id: 105, 
+      name: "Digital Art Print", 
+      price: "₦30,000", 
+      image: artwork5,
+      category: 'artworks',
+      description: "Modern digital art creation",
       inStock: true
     }
   ],
@@ -180,7 +213,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 201, 
       name: "Tesla Model 3", 
       price: "₦15,000,000", 
-      image: "/api/placeholder/300/300",
+      image: "",
       category: 'cars',
       description: "Electric luxury sedan",
       inStock: false
@@ -189,7 +222,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 202, 
       name: "BMW X5", 
       price: "₦12,000,000", 
-      image: "/api/placeholder/300/300",
+      image: "",
       category: 'cars',
       description: "Premium luxury SUV",
       inStock: true
@@ -200,7 +233,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 301, 
       name: "iPhone 15 Pro", 
       price: "₦500,000", 
-      image: "/api/placeholder/300/300",
+      image: "",
       category: 'phones',
       description: "Latest iPhone with Pro features",
       inStock: true
@@ -209,7 +242,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 302, 
       name: "Samsung Galaxy S24", 
       price: "₦400,000", 
-      image: "/api/placeholder/300/300",
+      image: "",
       category: 'phones',
       description: "Premium Android smartphone",
       inStock: true
@@ -220,7 +253,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 401, 
       name: "MacBook Pro M3", 
       price: "₦800,000", 
-      image: "/api/placeholder/300/300",
+      image: "",
       category: 'electronics',
       description: "Professional laptop with M3 chip",
       inStock: true
@@ -229,7 +262,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 402, 
       name: "iPad Air", 
       price: "₦350,000", 
-      image: "/api/placeholder/300/300",
+      image: "",
       category: 'electronics',
       description: "Versatile tablet for work and play",
       inStock: true
@@ -240,7 +273,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 501, 
       name: "Premium T-Shirt", 
       price: "₦8,000", 
-      image: "/api/placeholder/300/300",
+      image: "",
       category: 'clothes',
       description: "High-quality cotton t-shirt",
       inStock: true
@@ -249,7 +282,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 502, 
       name: "Designer Jeans", 
       price: "₦15,000", 
-      image: "/api/placeholder/300/300",
+      image: "",
       category: 'clothes',
       description: "Premium denim jeans",
       inStock: true
@@ -260,7 +293,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 601, 
       name: "Performance Shorts", 
       price: "₦6,000", 
-      image: "/api/placeholder/300/300",
+      image: "",
       category: 'gym-wear',
       description: "Athletic performance shorts",
       inStock: true
@@ -269,7 +302,7 @@ export const sampleProducts: { [key: string]: Product[] } = {
       id: 602, 
       name: "Athletic T-Shirt", 
       price: "₦5,000", 
-      image: "/api/placeholder/300/300",
+      image: "",
       category: 'gym-wear',
       description: "Moisture-wicking athletic shirt",
       inStock: true
