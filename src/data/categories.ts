@@ -60,7 +60,7 @@ export const productCategories: ProductCategory[] = [
     id: 'artworks',
     name: 'ARTWORKS',
     icon: Palette,
-    image: 'https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'CURATED ART PIECES',
     slug: 'artworks',
     isActive: true
@@ -69,7 +69,7 @@ export const productCategories: ProductCategory[] = [
     id: 'cars',
     name: 'CARS',
     icon: Car,
-    image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'PREMIUM VEHICLES',
     slug: 'cars',
     isActive: true
@@ -78,7 +78,7 @@ export const productCategories: ProductCategory[] = [
     id: 'shoes',
     name: 'SHOES',
     icon: ShoppingBag,
-    image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'COMFORT SLIDES',
     slug: 'shoes',
     isActive: true
@@ -87,7 +87,7 @@ export const productCategories: ProductCategory[] = [
     id: 'phones',
     name: 'PHONES',
     icon: Smartphone,
-    image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'MOBILE DEVICES',
     slug: 'phones',
     isActive: true
@@ -96,7 +96,7 @@ export const productCategories: ProductCategory[] = [
     id: 'electronics',
     name: 'ELECTRONICS',
     icon: Laptop,
-    image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'TECH ESSENTIALS',
     slug: 'electronics',
     isActive: true
@@ -105,7 +105,7 @@ export const productCategories: ProductCategory[] = [
     id: 'clothes',
     name: 'CLOTHES',
     icon: Shirt,
-    image: 'https://images.unsplash.com/photo-1525450824786-227cbef70703?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'LIFESTYLE WEAR',
     slug: 'clothes',
     isActive: true
@@ -114,7 +114,7 @@ export const productCategories: ProductCategory[] = [
     id: 'gym-wear',
     name: 'GYM WEAR',
     icon: Dumbbell,
-    image: 'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'FITNESS APPAREL',
     slug: 'gym-wear',
     isActive: true
@@ -123,7 +123,7 @@ export const productCategories: ProductCategory[] = [
     id: 'home-kitchen',
     name: 'HOME & KITCHEN',
     icon: Home,
-    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'APPLIANCES & LIVING',
     slug: 'home-kitchen',
     isActive: true
@@ -132,7 +132,7 @@ export const productCategories: ProductCategory[] = [
     id: 'health-beauty',
     name: 'HEALTH & BEAUTY',
     icon: Sparkles,
-    image: 'https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'WELLNESS PRODUCTS',
     slug: 'health-beauty',
     isActive: true
@@ -141,7 +141,7 @@ export const productCategories: ProductCategory[] = [
     id: 'baby-kids',
     name: 'BABY & KIDS',
     icon: Baby,
-    image: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'CHILDREN ESSENTIALS',
     slug: 'baby-kids',
     isActive: true
@@ -150,7 +150,7 @@ export const productCategories: ProductCategory[] = [
     id: 'sports',
     name: 'SPORTS',
     icon: Trophy,
-    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'ATHLETIC GEAR',
     slug: 'sports',
     isActive: true
@@ -159,7 +159,7 @@ export const productCategories: ProductCategory[] = [
     id: 'books-movies-music',
     name: 'BOOKS & MEDIA',
     icon: BookOpen,
-    image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'ENTERTAINMENT',
     slug: 'books-movies-music',
     isActive: true
@@ -168,7 +168,7 @@ export const productCategories: ProductCategory[] = [
     id: 'gaming-consoles',
     name: 'GAMING',
     icon: Gamepad2,
-    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'CONSOLES & GAMES',
     slug: 'gaming-consoles',
     isActive: true
@@ -177,7 +177,7 @@ export const productCategories: ProductCategory[] = [
     id: 'home-improvement',
     name: 'HOME IMPROVEMENT',
     icon: Hammer,
-    image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'TOOLS & GARDEN',
     slug: 'home-improvement',
     isActive: true
@@ -186,7 +186,7 @@ export const productCategories: ProductCategory[] = [
     id: 'office-supplies',
     name: 'OFFICE SUPPLIES',
     icon: PenTool,
-    image: 'https://images.unsplash.com/photo-1434626881859-194d67b2b86f?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'STATIONERY & WORKSPACE',
     slug: 'office-supplies',
     isActive: true
@@ -195,7 +195,7 @@ export const productCategories: ProductCategory[] = [
     id: 'industrial-equipment',
     name: 'INDUSTRIAL',
     icon: Settings,
-    image: 'https://images.unsplash.com/photo-1565043666747-69f6646db940?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'EQUIPMENT & MACHINERY',
     slug: 'industrial-equipment',
     isActive: true
@@ -204,7 +204,7 @@ export const productCategories: ProductCategory[] = [
     id: 'watches-glasses',
     name: 'WATCHES & GLASSES',
     icon: Watch,
-    image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: '',
     description: 'TIMEPIECES & EYEWEAR',
     slug: 'watches-glasses',
     isActive: true

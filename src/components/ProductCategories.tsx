@@ -34,13 +34,11 @@ const ProductCategories = () => {
                   {/* Category Card */}
                   <div className="bg-background border-0 hover:bg-gray-50 transition-colors duration-300">
                     
-                    {/* Image Container */}
-                    <div className="aspect-square bg-gray-100 flex items-center justify-center mb-6 group-hover:bg-gray-200 transition-colors duration-300 overflow-hidden">
-                      <img 
-                        src={category.image}
-                        alt={category.name}
-                        className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-300"
-                        loading="lazy"
+                    {/* Icon Container */}
+                    <div className="aspect-square bg-gray-100 flex items-center justify-center mb-6 group-hover:bg-gray-200 transition-colors duration-300">
+                      <category.icon 
+                        className="w-12 h-12 text-gray-600 group-hover:text-gray-800 transition-colors duration-300"
+                        strokeWidth={1}
                       />
                     </div>
                     
