@@ -52,7 +52,7 @@ const ProductFilters = ({
   const hasActiveFilters = 
     filters.category !== '' || 
     filters.priceRange[0] !== 0 || 
-    filters.priceRange[1] !== 1000 ||
+    filters.priceRange[1] !== 200000 ||
     filters.rating !== 0 ||
     filters.inStock !== null;
 
@@ -132,16 +132,16 @@ const ProductFilters = ({
                 value={filters.priceRange}
                 onValueChange={(value) => updateFilter('priceRange', value as [number, number])}
                 min={0}
-                max={1000}
-                step={10}
+                max={200000}
+                step={5000}
                 className="w-full"
               />
               <div className="flex justify-between mt-2">
                 <span className="brutalist-body text-xs text-gray-500">
-                  ${filters.priceRange[0]}
+                  ₦{filters.priceRange[0].toLocaleString()}
                 </span>
                 <span className="brutalist-body text-xs text-gray-500">
-                  ${filters.priceRange[1]}
+                  ₦{filters.priceRange[1].toLocaleString()}
                 </span>
               </div>
             </div>
@@ -240,13 +240,13 @@ const ProductFilters = ({
                 </Badge>
               )}
               
-              {(filters.priceRange[0] !== 0 || filters.priceRange[1] !== 1000) && (
+              {(filters.priceRange[0] !== 0 || filters.priceRange[1] !== 200000) && (
                 <Badge 
                   variant="secondary" 
                   className="flex items-center gap-1"
-                  onClick={() => updateFilter('priceRange', [0, 1000])}
+                  onClick={() => updateFilter('priceRange', [0, 200000])}
                 >
-                  ${filters.priceRange[0]}-${filters.priceRange[1]}
+                  ₦{filters.priceRange[0].toLocaleString()}-₦{filters.priceRange[1].toLocaleString()}
                   <X className="w-3 h-3 cursor-pointer" />
                 </Badge>
               )}

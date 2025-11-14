@@ -12,7 +12,7 @@ const CategoryPage = () => {
   // Filter state
   const [filters, setFilters] = useState<FilterState>({
     category: slug || '',
-    priceRange: [0, 1000],
+    priceRange: [0, 200000],
     rating: 0,
     inStock: null,
     sortBy: 'name'
@@ -37,7 +37,7 @@ const CategoryPage = () => {
 
     // Apply price filter
     result = result.filter(p => {
-      const price = parseFloat(p.price.replace('$', ''));
+      const price = parseFloat(p.price.replace('₦', '').replace(',', ''));
       return price >= filters.priceRange[0] && price <= filters.priceRange[1];
     });
 
@@ -57,9 +57,9 @@ const CategoryPage = () => {
         case 'name':
           return a.name.localeCompare(b.name);
         case 'price-low':
-          return parseFloat(a.price.replace('$', '')) - parseFloat(b.price.replace('$', ''));
+          return parseFloat(a.price.replace('₦', '').replace(',', '')) - parseFloat(b.price.replace('₦', '').replace(',', ''));
         case 'price-high':
-          return parseFloat(b.price.replace('$', '')) - parseFloat(a.price.replace('$', ''));
+          return parseFloat(b.price.replace('₦', '').replace(',', '')) - parseFloat(a.price.replace('₦', '').replace(',', ''));
         case 'rating':
           return getAverageRating(b.id) - getAverageRating(a.id);
         case 'newest':
@@ -75,7 +75,7 @@ const CategoryPage = () => {
   const clearFilters = () => {
     setFilters({
       category: slug || '',
-      priceRange: [0, 1000],
+      priceRange: [0, 200000],
       rating: 0,
       inStock: null,
       sortBy: 'name'
