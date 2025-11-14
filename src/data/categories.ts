@@ -15,6 +15,7 @@ import {
   Hammer,
   PenTool,
   Settings,
+  Watch,
   LucideIcon
 } from 'lucide-react';
 
@@ -95,7 +96,7 @@ export const productCategories: ProductCategory[] = [
     id: 'electronics',
     name: 'ELECTRONICS',
     icon: Laptop,
-    image: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'TECH ESSENTIALS',
     slug: 'electronics',
     isActive: true
@@ -113,7 +114,7 @@ export const productCategories: ProductCategory[] = [
     id: 'gym-wear',
     name: 'GYM WEAR',
     icon: Dumbbell,
-    image: 'https://images.unsplash.com/photo-1506629905607-45bc24dc0ac7?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: 'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'FITNESS APPAREL',
     slug: 'gym-wear',
     isActive: true
@@ -140,7 +141,7 @@ export const productCategories: ProductCategory[] = [
     id: 'baby-kids',
     name: 'BABY & KIDS',
     icon: Baby,
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'CHILDREN ESSENTIALS',
     slug: 'baby-kids',
     isActive: true
@@ -158,7 +159,7 @@ export const productCategories: ProductCategory[] = [
     id: 'books-movies-music',
     name: 'BOOKS & MEDIA',
     icon: BookOpen,
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'ENTERTAINMENT',
     slug: 'books-movies-music',
     isActive: true
@@ -185,7 +186,7 @@ export const productCategories: ProductCategory[] = [
     id: 'office-supplies',
     name: 'OFFICE SUPPLIES',
     icon: PenTool,
-    image: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    image: 'https://images.unsplash.com/photo-1434626881859-194d67b2b86f?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'STATIONERY & WORKSPACE',
     slug: 'office-supplies',
     isActive: true
@@ -197,6 +198,15 @@ export const productCategories: ProductCategory[] = [
     image: 'https://images.unsplash.com/photo-1565043666747-69f6646db940?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'EQUIPMENT & MACHINERY',
     slug: 'industrial-equipment',
+    isActive: true
+  },
+  {
+    id: 'watches-glasses',
+    name: 'WATCHES & GLASSES',
+    icon: Watch,
+    image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
+    description: 'TIMEPIECES & EYEWEAR',
+    slug: 'watches-glasses',
     isActive: true
   }
 ];
@@ -664,6 +674,44 @@ export const sampleProducts: { [key: string]: Product[] } = {
       image: "",
       category: 'industrial-equipment',
       description: "Precision measurement instruments",
+      inStock: true
+    }
+  ],
+  'watches-glasses': [
+    { 
+      id: 1601, 
+      name: "Classic Watch Collection", 
+      price: "₦85,000", 
+      image: "",
+      category: 'watches-glasses',
+      description: "Premium timepiece collection",
+      inStock: true
+    },
+    { 
+      id: 1602, 
+      name: "Designer Sunglasses", 
+      price: "₦45,000", 
+      image: "",
+      category: 'watches-glasses',
+      description: "Stylish UV protection eyewear",
+      inStock: true
+    },
+    { 
+      id: 1603, 
+      name: "Smart Watch Pro", 
+      price: "₦120,000", 
+      image: "",
+      category: 'watches-glasses',
+      description: "Advanced fitness and health tracking",
+      inStock: false
+    },
+    { 
+      id: 1604, 
+      name: "Reading Glasses Set", 
+      price: "₦25,000", 
+      image: "",
+      category: 'watches-glasses',
+      description: "Blue light filtering prescription glasses",
       inStock: true
     }
   ]
