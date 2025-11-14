@@ -63,7 +63,7 @@ const CategoryPage = () => {
         case 'rating':
           return getAverageRating(b.id) - getAverageRating(a.id);
         case 'newest':
-          return b.id.localeCompare(a.id); // Assuming higher ID means newer
+          return b.id - a.id; // Assuming higher ID means newer
         default:
           return 0;
       }
