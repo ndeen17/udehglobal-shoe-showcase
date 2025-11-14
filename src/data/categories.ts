@@ -37,6 +37,7 @@ export interface ProductCategory {
   id: string;
   name: string;
   icon: LucideIcon;
+  image: string;
   description: string;
   slug: string;
   isActive: boolean;
@@ -58,6 +59,7 @@ export const productCategories: ProductCategory[] = [
     id: 'artworks',
     name: 'ARTWORKS',
     icon: Palette,
+    image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'CURATED ART PIECES',
     slug: 'artworks',
     isActive: true
@@ -66,6 +68,7 @@ export const productCategories: ProductCategory[] = [
     id: 'cars',
     name: 'CARS',
     icon: Car,
+    image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'PREMIUM VEHICLES',
     slug: 'cars',
     isActive: true
@@ -74,6 +77,7 @@ export const productCategories: ProductCategory[] = [
     id: 'shoes',
     name: 'SHOES',
     icon: ShoppingBag,
+    image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'COMFORT SLIDES',
     slug: 'shoes',
     isActive: true
@@ -82,6 +86,7 @@ export const productCategories: ProductCategory[] = [
     id: 'phones',
     name: 'PHONES',
     icon: Smartphone,
+    image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'MOBILE DEVICES',
     slug: 'phones',
     isActive: true
@@ -90,6 +95,7 @@ export const productCategories: ProductCategory[] = [
     id: 'electronics',
     name: 'ELECTRONICS',
     icon: Laptop,
+    image: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'TECH ESSENTIALS',
     slug: 'electronics',
     isActive: true
@@ -98,6 +104,7 @@ export const productCategories: ProductCategory[] = [
     id: 'clothes',
     name: 'CLOTHES',
     icon: Shirt,
+    image: 'https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'LIFESTYLE WEAR',
     slug: 'clothes',
     isActive: true
@@ -106,6 +113,7 @@ export const productCategories: ProductCategory[] = [
     id: 'gym-wear',
     name: 'GYM WEAR',
     icon: Dumbbell,
+    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'FITNESS APPAREL',
     slug: 'gym-wear',
     isActive: true
@@ -114,6 +122,7 @@ export const productCategories: ProductCategory[] = [
     id: 'home-kitchen',
     name: 'HOME & KITCHEN',
     icon: Home,
+    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'APPLIANCES & LIVING',
     slug: 'home-kitchen',
     isActive: true
@@ -122,6 +131,7 @@ export const productCategories: ProductCategory[] = [
     id: 'health-beauty',
     name: 'HEALTH & BEAUTY',
     icon: Sparkles,
+    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'WELLNESS PRODUCTS',
     slug: 'health-beauty',
     isActive: true
@@ -130,6 +140,7 @@ export const productCategories: ProductCategory[] = [
     id: 'baby-kids',
     name: 'BABY & KIDS',
     icon: Baby,
+    image: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'CHILDREN ESSENTIALS',
     slug: 'baby-kids',
     isActive: true
@@ -138,6 +149,7 @@ export const productCategories: ProductCategory[] = [
     id: 'sports',
     name: 'SPORTS',
     icon: Trophy,
+    image: 'https://images.unsplash.com/photo-1593341646782-e0cfe1193caa?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'ATHLETIC GEAR',
     slug: 'sports',
     isActive: true
@@ -146,6 +158,7 @@ export const productCategories: ProductCategory[] = [
     id: 'books-movies-music',
     name: 'BOOKS & MEDIA',
     icon: BookOpen,
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'ENTERTAINMENT',
     slug: 'books-movies-music',
     isActive: true
@@ -154,6 +167,7 @@ export const productCategories: ProductCategory[] = [
     id: 'gaming-consoles',
     name: 'GAMING',
     icon: Gamepad2,
+    image: 'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'CONSOLES & GAMES',
     slug: 'gaming-consoles',
     isActive: true
@@ -162,6 +176,7 @@ export const productCategories: ProductCategory[] = [
     id: 'home-improvement',
     name: 'HOME IMPROVEMENT',
     icon: Hammer,
+    image: 'https://images.unsplash.com/photo-1581004218449-5c29ad14dbae?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'TOOLS & GARDEN',
     slug: 'home-improvement',
     isActive: true
@@ -170,6 +185,7 @@ export const productCategories: ProductCategory[] = [
     id: 'office-supplies',
     name: 'OFFICE SUPPLIES',
     icon: PenTool,
+    image: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'STATIONERY & WORKSPACE',
     slug: 'office-supplies',
     isActive: true
@@ -178,6 +194,7 @@ export const productCategories: ProductCategory[] = [
     id: 'industrial-equipment',
     name: 'INDUSTRIAL',
     icon: Settings,
+    image: 'https://images.unsplash.com/photo-1558618047-1c4c4194c7f1?w=400&h=400&fit=crop&crop=center&auto=format&q=80',
     description: 'EQUIPMENT & MACHINERY',
     slug: 'industrial-equipment',
     isActive: true

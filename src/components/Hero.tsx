@@ -1,4 +1,5 @@
 import logo from "@/assets/logo.png";
+import SearchBar from "@/components/SearchBar";
 
 const Hero = () => {
   return (
@@ -13,9 +14,14 @@ const Hero = () => {
               UDEH GLOBAL
             </h1>
             
-            <h2 className="brutalist-subheading text-sm tracking-wider text-gray-500">
+            <h2 className="brutalist-subheading text-sm tracking-wider text-gray-500 mb-12">
               PREMIUM LIFESTYLE PRODUCTS
             </h2>
+
+            {/* Search Bar */}
+            <div className="mt-16">
+              <SearchBar />
+            </div>
           </div>
           
         </div>

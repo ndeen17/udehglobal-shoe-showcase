@@ -7,12 +7,12 @@ import product5 from "@/assets/product-5.jpg";
 import product6 from "@/assets/product-6.jpg";
 
 const products = [
-  { id: 1, image: product1, title: "Premium Comfort Slides - Multi Color", price: "₦15,000" },
-  { id: 2, image: product2, title: "Classic Black Slides", price: "₦15,000" },
-  { id: 3, image: product3, title: "Sport White Slides", price: "₦15,000" },
-  { id: 4, image: product4, title: "Navy Blue Comfort Slides", price: "₦15,000" },
-  { id: 5, image: product5, title: "Designer Black Slides", price: "₦15,000" },
-  { id: 6, image: product6, title: "Flip Flop Style Slides", price: "₦15,000" },
+  { id: 1, image: product1, title: "Premium Comfort Slides - Multi Color", price: "₦15,000", category: "Shoes" },
+  { id: 2, image: product2, title: "Classic Black Slides", price: "₦15,000", category: "Shoes" },
+  { id: 3, image: product3, title: "Sport White Slides", price: "₦15,000", category: "Shoes" },
+  { id: 4, image: product4, title: "Navy Blue Comfort Slides", price: "₦15,000", category: "Shoes" },
+  { id: 5, image: product5, title: "Designer Black Slides", price: "₦15,000", category: "Shoes" },
+  { id: 6, image: product6, title: "Flip Flop Style Slides", price: "₦15,000", category: "Shoes" },
 ];
 
 const ProductsSection = () => {
@@ -37,6 +37,7 @@ const ProductsSection = () => {
               image={product.image}
               title={product.title}
               price={product.price}
+              category={product.category}
             />
           ))}
         </div>

@@ -23,7 +23,6 @@ const ProductCategories = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8">
             {categories.map((category) => {
-              const IconComponent = category.icon;
               const productCount = getProductsByCategory(category.slug).length;
               
               return (
@@ -35,11 +34,13 @@ const ProductCategories = () => {
                   {/* Category Card */}
                   <div className="bg-background border-0 hover:bg-gray-50 transition-colors duration-300">
                     
-                    {/* Icon Container */}
-                    <div className="aspect-square bg-gray-100 flex items-center justify-center mb-6 group-hover:bg-gray-200 transition-colors duration-300">
-                      <IconComponent 
-                        className="w-12 h-12 text-foreground" 
-                        strokeWidth={1}
+                    {/* Image Container */}
+                    <div className="aspect-square bg-gray-100 flex items-center justify-center mb-6 group-hover:bg-gray-200 transition-colors duration-300 overflow-hidden">
+                      <img 
+                        src={category.image}
+                        alt={category.name}
+                        className="w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-300"
+                        loading="lazy"
                       />
                     </div>
                     

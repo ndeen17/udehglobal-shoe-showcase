@@ -1,43 +1,91 @@
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { ArrowLeft, Heart, ShoppingBag, Star, Plus, Minus, Share2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useApp } from '@/contexts/AppContext';
-import { getAllProducts } from '@/data/categories';
+import StarRating from '@/components/StarRating';
+import ReviewsList from '@/components/ReviewsList';
+import { getAllProducts, getCategoryBySlug } from '@/data/categories';
 
 const ProductDetail = () => {
   const { slug } = useParams();
-  const { addToCart } = useApp();
+  const { addToCart, addToWishlist, removeFromWishlist, isInWishlist, getAverageRating, getProductReviews } = useApp();
+  const navigate = useNavigate();
+  const [quantity, setQuantity] = useState(1);
 
   // Get all products and find the one matching the slug
   const allProducts = getAllProducts();
   const product = allProducts.find(p => 
     p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') === slug
   );
+  
+  const inWishlist = product ? isInWishlist(product.id) : false;
+
+  const handleQuantityChange = (increment: boolean) => {
+    if (increment) {
+      setQuantity(prev => prev + 1);
+    } else {
+      setQuantity(prev => Math.max(1, prev - 1));
+    }
+  };
+
+  const handleToggleWishlist = () => {
+    if (!product) return;
+    
+    if (inWishlist) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist({
+        id: product.id,
+        image: product.image,
+        title: product.name,
+        price: product.price,
+        category: product.category
+      });
+    }
+  };
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-background pt-20 px-brutalist-md">
-        <div className="text-center pt-brutalist-2xl">
-          <h1 className="font-brutalist text-brutalist-lg font-light tracking-widest text-foreground mb-brutalist-md">
+      <div className="min-h-screen bg-background pt-20 px-8">
+        <div className="text-center pt-16">
+          <h1 className="brutalist-heading text-2xl tracking-widest text-foreground mb-8">
             PRODUCT NOT FOUND
           </h1>
-          <Link 
-            to="/"
-            className="font-brutalist text-brutalist-sm font-light tracking-wider text-muted-foreground hover:text-foreground transition-colors duration-300"
-          >
-            RETURN HOME
-          </Link>
+          <Button onClick={() => navigate(-1)} variant="outline">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            GO BACK
+          </Button>
         </div>
       </div>
     );
   }
 
   const handleAddToCart = () => {
-    addToCart({
-      id: product.id,
-      image: product.image,
-      title: product.name,
-      price: product.price
-    });
+    for (let i = 0; i < quantity; i++) {
+      addToCart({
+        id: product.id,
+        image: product.image,
+        title: product.name,
+        price: product.price,
+        category: product.category
+      });
+    }
+  };
+
+  const handleWishlistToggle = () => {
+    if (inWishlist) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist({
+        id: product.id,
+        image: product.image,
+        title: product.name,
+        price: product.price,
+        category: product.category
+      });
+    }
   };
 
   return (
@@ -56,7 +104,7 @@ const ProductDetail = () => {
 
       {/* Product Detail Content */}
       <div className="px-8 py-16">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             
             {/* Product Image */}
@@ -69,22 +117,48 @@ const ProductDetail = () => {
             </div>
 
             {/* Product Info */}
-            <div className="flex flex-col justify-center space-y-16">
+            <div className="flex flex-col justify-center space-y-12">
               
-              <div className="space-y-8">
+              {/* Header */}
+              <div className="space-y-6">
+                <Badge variant="secondary" className="mb-4">
+                  {product.category.toUpperCase()}
+                </Badge>
                 <h1 className="brutalist-heading text-2xl tracking-widest text-foreground">
                   {product.name.toUpperCase()}
                 </h1>
-                
-                <p className="brutalist-subheading text-lg tracking-wider text-foreground">
-                  {product.price}
-                </p>
+                <div className="flex items-center gap-4">
+                  <span className="brutalist-subheading text-lg tracking-wider text-foreground">
+                    {product.price}
+                  </span>
+                  {product.inStock ? (
+                    <Badge variant="default" className="bg-green-100 text-green-800">
+                      IN STOCK
+                    </Badge>
+                  ) : (
+                    <Badge variant="destructive">
+                      OUT OF STOCK
+                    </Badge>
+                  )}
+                </div>
+              </div>
+
+              {/* Rating */}
+              <div className="flex items-center gap-2">
+                <StarRating 
+                  rating={getAverageRating(product.id)} 
+                  size="sm" 
+                  interactive={false}
+                />
+                <span className="brutalist-body text-xs tracking-wide text-gray-500">
+                  {getAverageRating(product.id).toFixed(1)} ({getProductReviews(product.id).length} REVIEWS)
+                </span>
               </div>
 
               {/* Product Description */}
               <div className="space-y-4">
                 <p className="brutalist-body text-sm tracking-wide text-gray-500 leading-relaxed">
-                  PREMIUM COMFORT DESIGN WITH ERGONOMIC FOOTBED
+                  {product.description || 'PREMIUM COMFORT DESIGN WITH ERGONOMIC FOOTBED'}
                 </p>
                 <p className="brutalist-body text-sm tracking-wide text-gray-500 leading-relaxed">
                   LIGHTWEIGHT CONSTRUCTION FOR ALL-DAY WEAR
@@ -94,17 +168,94 @@ const ProductDetail = () => {
                 </p>
               </div>
 
-              {/* Add to Cart */}
-              <div className="pt-8">
-                <button 
+              {/* Quantity Selector */}
+              <div className="space-y-4">
+                <label className="brutalist-body text-sm tracking-wider text-foreground">
+                  QUANTITY
+                </label>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center border">
+                    <button
+                      onClick={() => handleQuantityChange(false)}
+                      className="p-3 hover:bg-gray-100 transition-colors"
+                      disabled={quantity <= 1}
+                    >
+                      <Minus className="w-4 h-4" />
+                    </button>
+                    <span className="px-6 py-3 brutalist-body text-sm tracking-wider min-w-[60px] text-center">
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={() => handleQuantityChange(true)}
+                      className="p-3 hover:bg-gray-100 transition-colors"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-4">
+                <Button 
                   onClick={handleAddToCart}
-                  className="brutalist-body text-xs tracking-widest text-foreground hover:text-gray-500 transition-colors duration-300 bg-transparent border-0 p-0"
+                  disabled={!product.inStock}
+                  className="w-full h-12 tracking-wider brutalist-body"
                 >
-                  ADD TO CART
-                </button>
+                  <ShoppingBag className="w-4 h-4 mr-2" />
+                  ADD TO CART ({quantity})
+                </Button>
+                
+                <div className="flex gap-4">
+                  <Button
+                    variant="outline"
+                    onClick={handleToggleWishlist}
+                    className="flex-1 h-12 tracking-wider"
+                  >
+                    <Heart className={`w-4 h-4 mr-2 ${inWishlist ? 'fill-current text-red-500' : ''}`} />
+                    {inWishlist ? 'WISHLISTED' : 'ADD TO WISHLIST'}
+                  </Button>
+                  
+                  <Button variant="outline" size="icon" className="h-12 w-12">
+                    <Share2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Product Features */}
+              <div className="border-t pt-8">
+                <h3 className="brutalist-body text-sm tracking-wider text-foreground mb-4">
+                  PRODUCT FEATURES
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="brutalist-body text-xs tracking-wide text-gray-600">Material</span>
+                    <span className="brutalist-body text-xs tracking-wide text-foreground">Premium Quality</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="brutalist-body text-xs tracking-wide text-gray-600">Origin</span>
+                    <span className="brutalist-body text-xs tracking-wide text-foreground">Manufactured with Care</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="brutalist-body text-xs tracking-wide text-gray-600">Warranty</span>
+                    <span className="brutalist-body text-xs tracking-wide text-foreground">1 Year</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2">
+                    <span className="brutalist-body text-xs tracking-wide text-gray-600">Shipping</span>
+                    <span className="brutalist-body text-xs tracking-wide text-foreground">Free Delivery</span>
+                  </div>
+                </div>
               </div>
 
             </div>
+          </div>
+          
+          {/* Reviews Section */}
+          <div className="mt-16 pt-16 border-t border-gray-200">
+            <ReviewsList 
+              productId={product.id} 
+              productName={product.name} 
+            />
           </div>
         </div>
       </div>

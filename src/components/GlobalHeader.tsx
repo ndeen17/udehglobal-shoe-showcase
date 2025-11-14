@@ -1,10 +1,17 @@
 import { useApp } from '@/contexts/AppContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
-import { Plus, User, Clock, ShoppingBag } from 'lucide-react';
+import { Plus, User, Clock, ShoppingBag, LogOut, Settings, Heart } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import NavigationOverlay from './NavigationOverlay';
 
 const GlobalHeader = () => {
-  const { cartCount, toggleNav } = useApp();
+  const { cartCount, toggleNav, wishlistCount } = useApp();
+  const { user, isAuthenticated, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <>
@@ -26,16 +33,67 @@ const GlobalHeader = () => {
 
           {/* Center: Utility Icons */}
           <div className="flex items-center space-x-8">
-            <Link 
-              to="/account" 
-              className="p-2 hover:bg-transparent transition-none"
-              aria-label="Account"
-            >
-              <User 
-                className="w-4 h-4 text-foreground" 
-                strokeWidth={1}
-              />
-            </Link>
+            {/* Account/User Menu */}
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="p-2 hover:bg-transparent transition-none">
+                  <div className="flex items-center space-x-2">
+                    {user?.avatar ? (
+                      <img 
+                        src={user.avatar} 
+                        alt={user.name}
+                        className="w-6 h-6 rounded-full object-cover"
+                      />
+                    ) : (
+                      <User 
+                        className="w-4 h-4 text-foreground" 
+                        strokeWidth={1}
+                      />
+                    )}
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="w-48">
+                  <div className="px-2 py-2 border-b border-gray-200">
+                    <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+                    <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                  </div>
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="flex items-center space-x-2 w-full">
+                      <Settings className="w-4 h-4" />
+                      <span>Dashboard</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/account" className="flex items-center space-x-2 w-full">
+                      <User className="w-4 h-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/history" className="flex items-center space-x-2 w-full">
+                      <Clock className="w-4 h-4" />
+                      <span>Order History</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="flex items-center space-x-2 w-full text-red-600">
+                    <LogOut className="w-4 h-4" />
+                    <span>Sign Out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link 
+                to="/login" 
+                className="p-2 hover:bg-transparent transition-none"
+                aria-label="Sign In"
+              >
+                <User 
+                  className="w-4 h-4 text-foreground" 
+                  strokeWidth={1}
+                />
+              </Link>
+            )}
             
             <Link 
               to="/history" 
@@ -46,6 +104,23 @@ const GlobalHeader = () => {
                 className="w-4 h-4 text-foreground" 
                 strokeWidth={1}
               />
+            </Link>
+            
+            {/* Wishlist Icon with Count */}
+            <Link 
+              to="/wishlist" 
+              className="relative p-2 hover:bg-transparent transition-none"
+              aria-label={`Wishlist with ${wishlistCount} items`}
+            >
+              <Heart 
+                className="w-4 h-4 text-foreground" 
+                strokeWidth={1}
+              />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center brutalist-body text-[10px]">
+                  {wishlistCount > 9 ? '9+' : wishlistCount}
+                </span>
+              )}
             </Link>
             
             <Link 
