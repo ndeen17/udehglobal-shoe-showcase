@@ -26,7 +26,7 @@ const CategoryPage = () => {
     ? getAllProducts()
     : getProductsByCategory(slug);
   
-  // Apply filters to products
+  // Apply filters to products (simplified for debugging)
   const filteredProducts = useMemo(() => {
     let result = [...baseProducts];
 
@@ -38,7 +38,7 @@ const CategoryPage = () => {
     // Apply price filter
     result = result.filter(p => {
       const price = parseFloat(p.price.replace('₦', '').replace(',', ''));
-      return price >= filters.priceRange[0] && price <= filters.priceRange[1];
+      return !isNaN(price) && price >= filters.priceRange[0] && price <= filters.priceRange[1];
     });
 
     // Apply rating filter
@@ -57,13 +57,17 @@ const CategoryPage = () => {
         case 'name':
           return a.name.localeCompare(b.name);
         case 'price-low':
-          return parseFloat(a.price.replace('₦', '').replace(',', '')) - parseFloat(b.price.replace('₦', '').replace(',', ''));
+          const priceA = parseFloat(a.price.replace('₦', '').replace(',', ''));
+          const priceB = parseFloat(b.price.replace('₦', '').replace(',', ''));
+          return priceA - priceB;
         case 'price-high':
-          return parseFloat(b.price.replace('₦', '').replace(',', '')) - parseFloat(a.price.replace('₦', '').replace(',', ''));
+          const priceA2 = parseFloat(a.price.replace('₦', '').replace(',', ''));
+          const priceB2 = parseFloat(b.price.replace('₦', '').replace(',', ''));
+          return priceB2 - priceA2;
         case 'rating':
           return getAverageRating(b.id) - getAverageRating(a.id);
         case 'newest':
-          return b.id - a.id; // Assuming higher ID means newer
+          return b.id - a.id;
         default:
           return 0;
       }
@@ -71,7 +75,6 @@ const CategoryPage = () => {
 
     return result;
   }, [baseProducts, filters, getAverageRating, slug]);
-
   const clearFilters = () => {
     setFilters({
       category: slug || '',
@@ -189,11 +192,22 @@ const CategoryPage = () => {
         ) : (
           <div className="text-center py-16">
             <p className="brutalist-body text-sm tracking-wide text-gray-500">
-              COMING SOON
+              {baseProducts.length === 0 ? 'COMING SOON' : 'NO PRODUCTS MATCH YOUR FILTERS'}
             </p>
             <p className="brutalist-body text-xs tracking-wide text-gray-400 mt-2">
-              Products will be added to this category shortly
+              {baseProducts.length === 0 
+                ? 'Products will be added to this category shortly' 
+                : 'Try adjusting your filter criteria'
+              }
             </p>
+            {baseProducts.length > 0 && filteredProducts.length === 0 && (
+              <button 
+                onClick={clearFilters}
+                className="mt-4 brutalist-body text-xs tracking-wider text-foreground hover:text-gray-500 underline"
+              >
+                CLEAR ALL FILTERS
+              </button>
+            )}
           </div>
         )}
       </div>
