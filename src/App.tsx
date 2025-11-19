@@ -5,12 +5,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "@/contexts/AppContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { CartProvider } from "@/hooks/useCart";
+import { AdminAuthProvider } from "@/admin/context/AdminAuthContext";
 import GlobalHeader from "@/components/GlobalHeader";
 import ChatSupport from "@/components/ChatSupport";
 import Index from "./pages/Index";
 import CategoryPage from "./pages/CategoryPage";
 import ProductDetail from "./pages/ProductDetail";
-import Cart from "./pages/Cart";
+import CartPage from "./pages/CartPage.tsx";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import SearchResults from "./pages/SearchResults";
@@ -19,43 +21,96 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Wishlist from "./pages/Wishlist";
+import Profile from "./pages/Profile";
+import Addresses from "./pages/Addresses";
+import OrderHistory from "./pages/OrderHistory";
+import OrderDetails from "./pages/OrderDetails";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentFailed from "./pages/PaymentFailed";
 import NotFound from "./pages/NotFound";
+import AdminLogin from "./admin/pages/AdminLogin";
+import AdminDashboard from "./admin/pages/AdminDashboard";
+import ProductManagement from "./admin/pages/ProductManagement";
+import ProductForm from "./admin/pages/ProductForm";
+import OrderManagement from "./admin/pages/OrderManagement";
+import CustomerManagement from "./admin/pages/CustomerManagement";
+import Categories from "./admin/pages/Categories";
+import AdminLayout from "./admin/components/AdminLayout";
+import ProtectedAdminRoute from "./admin/components/ProtectedAdminRoute";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <AuthProvider>
-        <AppProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <GlobalHeader />
-            <ChatSupport />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/category/:slug" element={<CategoryPage />} />
-              <Route path="/item/:slug" element={<ProductDetail />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/search" element={<SearchResults />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/wishlist" element={<Wishlist />} />
-              <Route path="/products" element={<CategoryPage />} />
-              <Route path="/info" element={<About />} />
-              <Route path="/account" element={<About />} />
-              <Route path="/history" element={<About />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </AppProvider>
-      </AuthProvider>
+      <AdminAuthProvider>
+        <AuthProvider>
+          <CartProvider>
+            <AppProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <Routes>
+                  {/* Admin Routes */}
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/admin/*" element={
+                    <ProtectedAdminRoute>
+                      <AdminLayout />
+                    </ProtectedAdminRoute>
+                  }>
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="products" element={<ProductManagement />} />
+                    <Route path="products/new" element={<ProductForm />} />
+                    <Route path="products/:id/edit" element={<ProductForm />} />
+                    <Route path="categories" element={<Categories />} />
+                    <Route path="orders" element={<OrderManagement />} />
+                    <Route path="customers" element={<CustomerManagement />} />
+                    {/* Add more admin routes as needed */}
+                  </Route>
+                  
+                  {/* Main App Routes */}
+                  <Route path="/*" element={
+                    <>
+                      <GlobalHeader />
+                      <ChatSupport />
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/category/:slug" element={<CategoryPage />} />
+                        <Route path="/item/:slug" element={<ProductDetail />} />
+                        <Route path="/cart" element={<CartPage />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/search" element={<SearchResults />} />
+                        <Route path="/checkout" element={<Checkout />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/signup" element={<Signup />} />
+                        <Route path="/forgot-password" element={<ForgotPassword />} />
+                        <Route path="/reset-password/:token" element={<ResetPassword />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/wishlist" element={<Wishlist />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/addresses" element={<Addresses />} />
+                        <Route path="/orders" element={<OrderHistory />} />
+                        <Route path="/orders/:orderId" element={<OrderDetails />} />
+                        <Route path="/payment/success" element={<PaymentSuccess />} />
+                        <Route path="/payment/failed" element={<PaymentFailed />} />
+                        <Route path="/products" element={<CategoryPage />} />
+                        <Route path="/info" element={<About />} />
+                        <Route path="/account" element={<Profile />} />
+                        <Route path="/history" element={<OrderHistory />} />
+                        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </>
+                  } />
+                </Routes>
+              </BrowserRouter>
+            </AppProvider>
+          </CartProvider>
+        </AuthProvider>
+      </AdminAuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

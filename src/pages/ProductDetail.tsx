@@ -1,26 +1,65 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Heart, ShoppingBag, Star, Plus, Minus, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useApp } from '@/contexts/AppContext';
 import StarRating from '@/components/StarRating';
 import ReviewsList from '@/components/ReviewsList';
-import { getAllProducts, getCategoryBySlug } from '@/data/categories';
+import { productsAPI } from '@/services/api';
+import { Product } from '@/types/Product';
+import { useToast } from '@/components/ui/use-toast';
+import { getProductId, getProductImageUrl, getProductName, getProductPrice, getProductCategory } from '@/utils/productUtils';
 
 const ProductDetail = () => {
   const { slug } = useParams();
   const { addToCart, addToWishlist, removeFromWishlist, isInWishlist, getAverageRating, getProductReviews } = useApp();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Get all products and find the one matching the slug
-  const allProducts = getAllProducts();
-  const product = allProducts.find(p => 
-    p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') === slug
-  );
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!slug) return;
+
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Try to get product by slug - we'll need to fetch all products and find the matching one
+        // since we don't have a direct getProductBySlug endpoint
+        const allProductsResponse = await productsAPI.getProducts();
+        const foundProduct = allProductsResponse.products.find(p => 
+          p.slug === slug || 
+          p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') === slug
+        );
+        
+        if (!foundProduct) {
+          setError('Product not found');
+          return;
+        }
+        
+        setProduct(foundProduct);
+      } catch (error: any) {
+        console.error('Failed to fetch product:', error);
+        setError(error.message || 'Failed to load product');
+        toast({
+          title: 'Error',
+          description: 'Failed to load product details.',
+          variant: 'destructive',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [slug, toast]);
   
-  const inWishlist = product ? isInWishlist(product.id) : false;
+  const inWishlist = product ? isInWishlist(getProductId(product)) : false;
 
   const handleQuantityChange = (increment: boolean) => {
     if (increment) {
@@ -33,25 +72,41 @@ const ProductDetail = () => {
   const handleToggleWishlist = () => {
     if (!product) return;
     
+    const productId = getProductId(product);
+    
     if (inWishlist) {
-      removeFromWishlist(product.id);
+      removeFromWishlist(productId);
     } else {
       addToWishlist({
-        id: product.id,
-        image: product.image,
-        title: product.name,
-        price: product.price,
-        category: product.category
+        id: productId,
+        image: getProductImageUrl(product),
+        title: getProductName(product),
+        price: getProductPrice(product),
+        category: getProductCategory(product)
       });
     }
   };
 
-  if (!product) {
+  // Loading state
+  if (loading) {
     return (
       <div className="min-h-screen bg-background pt-20 px-8">
         <div className="text-center pt-16">
           <h1 className="brutalist-heading text-2xl tracking-widest text-foreground mb-8">
-            PRODUCT NOT FOUND
+            LOADING...
+          </h1>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error || !product) {
+    return (
+      <div className="min-h-screen bg-background pt-20 px-8">
+        <div className="text-center pt-16">
+          <h1 className="brutalist-heading text-2xl tracking-widest text-foreground mb-8">
+            {error || 'PRODUCT NOT FOUND'}
           </h1>
           <Button onClick={() => navigate(-1)} variant="outline">
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -63,27 +118,14 @@ const ProductDetail = () => {
   }
 
   const handleAddToCart = () => {
+    const productId = getProductId(product);
     for (let i = 0; i < quantity; i++) {
       addToCart({
-        id: product.id,
-        image: product.image,
-        title: product.name,
-        price: product.price,
-        category: product.category
-      });
-    }
-  };
-
-  const handleWishlistToggle = () => {
-    if (inWishlist) {
-      removeFromWishlist(product.id);
-    } else {
-      addToWishlist({
-        id: product.id,
-        image: product.image,
-        title: product.name,
-        price: product.price,
-        category: product.category
+        id: productId,
+        image: getProductImageUrl(product),
+        title: getProductName(product),
+        price: getProductPrice(product),
+        category: getProductCategory(product)
       });
     }
   };
@@ -110,7 +152,7 @@ const ProductDetail = () => {
             {/* Product Image */}
             <div className="aspect-square bg-gray-100">
               <img 
-                src={product.image} 
+                src={getProductImageUrl(product)} 
                 alt={product.name}
                 className="w-full h-full object-cover filter grayscale-[20%] contrast-90 brightness-95"
               />
@@ -131,7 +173,7 @@ const ProductDetail = () => {
                   <span className="brutalist-subheading text-lg tracking-wider text-foreground">
                     {product.price}
                   </span>
-                  {product.inStock ? (
+                  {product.stockQuantity > 0 ? (
                     <Badge variant="default" className="bg-green-100 text-green-800">
                       IN STOCK
                     </Badge>
@@ -146,12 +188,12 @@ const ProductDetail = () => {
               {/* Rating */}
               <div className="flex items-center gap-2">
                 <StarRating 
-                  rating={getAverageRating(product.id)} 
+                  rating={getAverageRating(getProductId(product))} 
                   size="sm" 
                   interactive={false}
                 />
                 <span className="brutalist-body text-xs tracking-wide text-gray-500">
-                  {getAverageRating(product.id).toFixed(1)} ({getProductReviews(product.id).length} REVIEWS)
+                  {getAverageRating(getProductId(product)).toFixed(1)} ({getProductReviews(getProductId(product)).length} REVIEWS)
                 </span>
               </div>
 
@@ -199,7 +241,7 @@ const ProductDetail = () => {
               <div className="space-y-4">
                 <Button 
                   onClick={handleAddToCart}
-                  disabled={!product.inStock}
+                  disabled={product.stockQuantity <= 0}
                   className="w-full h-12 tracking-wider brutalist-body"
                 >
                   <ShoppingBag className="w-4 h-4 mr-2" />
@@ -253,8 +295,8 @@ const ProductDetail = () => {
           {/* Reviews Section */}
           <div className="mt-16 pt-16 border-t border-gray-200">
             <ReviewsList 
-              productId={product.id} 
-              productName={product.name} 
+              productId={getProductId(product)} 
+              productName={getProductName(product)} 
             />
           </div>
         </div>

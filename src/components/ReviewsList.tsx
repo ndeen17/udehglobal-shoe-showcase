@@ -7,7 +7,7 @@ import StarRating from './StarRating';
 import ReviewForm from './ReviewForm';
 
 interface ReviewsListProps {
-  productId: number;
+  productId: string;
   productName: string;
 }
 

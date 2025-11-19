@@ -1,21 +1,38 @@
 import ProductCard from "./ProductCard";
-import product1 from "@/assets/product-1.jpg";
-import product2 from "@/assets/product-2.jpg";
-import product3 from "@/assets/product-3.jpg";
-import product4 from "@/assets/product-4.jpg";
-import product5 from "@/assets/product-5.jpg";
-import product6 from "@/assets/product-6.jpg";
-
-const products = [
-  { id: 1, image: product1, title: "Premium Comfort Slides - Multi Color", price: "₦15,000", category: "Shoes" },
-  { id: 2, image: product2, title: "Classic Black Slides", price: "₦15,000", category: "Shoes" },
-  { id: 3, image: product3, title: "Sport White Slides", price: "₦15,000", category: "Shoes" },
-  { id: 4, image: product4, title: "Navy Blue Comfort Slides", price: "₦15,000", category: "Shoes" },
-  { id: 5, image: product5, title: "Designer Black Slides", price: "₦15,000", category: "Shoes" },
-  { id: 6, image: product6, title: "Flip Flop Style Slides", price: "₦15,000", category: "Shoes" },
-];
+import { useState, useEffect } from "react";
+import { productsAPI } from "@/services/api";
+import type { Product } from "@/types/Product";
+import { useToast } from "@/components/ui/use-toast";
 
 const ProductsSection = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await productsAPI.getProducts();
+        setProducts(response.products);
+      } catch (error: any) {
+        console.error('Failed to fetch products:', error);
+        setError(error.message || 'Failed to load products');
+        toast({
+          title: 'Error',
+          description: 'Failed to load products. Please try again.',
+          variant: 'destructive',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [toast]);
+
   return (
     <section id="products" className="bg-background">
       {/* Yeezy-Style High-Density Grid */}
@@ -28,19 +45,44 @@ const ProductsSection = () => {
           </h2>
         </div>
         
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-12">
+            <p className="brutalist-body text-sm tracking-wide text-gray-500">
+              LOADING PRODUCTS...
+            </p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !loading && (
+          <div className="text-center py-12">
+            <p className="brutalist-body text-sm tracking-wide text-red-500">
+              {error.toUpperCase()}
+            </p>
+          </div>
+        )}
+        
         {/* High-Density Product Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
-          {products.map((product) => (
-            <ProductCard 
-              key={product.id}
-              id={product.id}
-              image={product.image}
-              title={product.title}
-              price={product.price}
-              category={product.category}
-            />
-          ))}
-        </div>
+        {!loading && !error && (
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+            {products.map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && !error && products.length === 0 && (
+          <div className="text-center py-12">
+            <p className="brutalist-body text-sm tracking-wide text-gray-500">
+              NO PRODUCTS FOUND
+            </p>
+          </div>
+        )}
         
       </div>
     </section>

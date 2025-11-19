@@ -21,7 +21,7 @@ const Cart = () => {
   const discountAmount = isPromoApplied ? subtotal * discount : 0;
   const total = subtotal + shipping + tax - discountAmount;
 
-  const handleQuantityChange = (itemId: number, newQuantity: number) => {
+  const handleQuantityChange = (itemId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
     updateCartQuantity(itemId, newQuantity);
   };

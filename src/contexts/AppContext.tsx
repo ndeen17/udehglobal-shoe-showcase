@@ -1,17 +1,8 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
-// Types
-interface CartItem {
-  id: number;
-  title: string;
-  price: string;
-  image: string;
-  category: string;
-  quantity: number;
-}
-
+// Types for local-only features (not implemented in backend)
 interface WishlistItem {
-  id: number;
+  id: string; // MongoDB ObjectId format
   title: string;
   price: string;
   image: string;
@@ -21,7 +12,7 @@ interface WishlistItem {
 
 interface Review {
   id: string;
-  productId: number;
+  productId: string; // MongoDB ObjectId format  
   userId: string;
   userName: string;
   userAvatar?: string;
@@ -34,34 +25,34 @@ interface Review {
 }
 
 interface AppContextType {
-  // Cart state
-  cartItems: CartItem[];
-  cartCount: number;
-  addToCart: (item: Omit<CartItem, 'quantity'>) => void;
-  removeFromCart: (id: number) => void;
-  clearCart: () => void;
-  updateCartQuantity: (id: number, quantity: number) => void;
-  
-  // Wishlist state
+  // Wishlist state (local storage only - not implemented in backend)
   wishlistItems: WishlistItem[];
   wishlistCount: number;
   addToWishlist: (item: Omit<WishlistItem, 'addedAt'>) => void;
-  removeFromWishlist: (id: number) => void;
+  removeFromWishlist: (id: string) => void;
   clearWishlist: () => void;
-  isInWishlist: (id: number) => boolean;
+  isInWishlist: (id: string) => boolean;
   
-  // Reviews state
+  // Reviews state (local storage only - not implemented in backend)
   reviews: Review[];
   addReview: (review: Omit<Review, 'id' | 'createdAt' | 'helpful'>) => void;
-  getProductReviews: (productId: number) => Review[];
-  getAverageRating: (productId: number) => number;
-  getRatingCounts: (productId: number) => { [key: number]: number };
+  getProductReviews: (productId: string) => Review[];
+  getAverageRating: (productId: string) => number;
+  getRatingCounts: (productId: string) => { [key: number]: number };
   markReviewHelpful: (reviewId: string) => void;
   
   // Navigation state
   isNavOpen: boolean;
   toggleNav: () => void;
   closeNav: () => void;
+  
+  // Cart state (legacy support - actual cart handled by useCart hook)
+  cartItems: any[]; // Deprecated - use useCart hook
+  cartCount: number; // Deprecated - use useCart hook
+  addToCart?: (item: any) => Promise<void>; // Deprecated - use useCart hook
+  removeFromCart?: (id: string) => Promise<void>; // Deprecated - use useCart hook
+  clearCart?: () => Promise<void>; // Deprecated - use useCart hook
+  updateCartQuantity?: (id: string, quantity: number) => Promise<void>; // Deprecated - use useCart hook
 }
 
 // Create context
@@ -69,18 +60,15 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 // Provider component
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  // Cart state
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  
-  // Wishlist state
+  // Wishlist state (local storage since backend doesn't have wishlist)
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>(() => {
-    const saved = localStorage.getItem('wishlist-items');
+    const saved = localStorage.getItem('udeh-wishlist');
     return saved ? JSON.parse(saved) : [];
   });
   
-  // Reviews state
+  // Reviews state (local storage since backend doesn't have reviews yet)
   const [reviews, setReviews] = useState<Review[]>(() => {
-    const saved = localStorage.getItem('product-reviews');
+    const saved = localStorage.getItem('udeh-reviews');
     return saved ? JSON.parse(saved).map((review: any) => ({
       ...review,
       createdAt: new Date(review.createdAt)
@@ -90,37 +78,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   // Navigation state
   const [isNavOpen, setIsNavOpen] = useState(false);
 
-  // Cart functions
-  const addToCart = (item: Omit<CartItem, 'quantity'>) => {
-    setCartItems(prev => {
-      const existingItem = prev.find(cartItem => cartItem.id === item.id);
-      if (existingItem) {
-        return prev.map(cartItem =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem
-        );
-      }
-      return [...prev, { ...item, quantity: 1 }];
-    });
-  };
-
-  const removeFromCart = (id: number) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
-  };
-
-  const clearCart = () => {
-    setCartItems([]);
-  };
-
-  const updateCartQuantity = (id: number, quantity: number) => {
-    setCartItems(prev => 
-      prev.map(item => 
-        item.id === id ? { ...item, quantity } : item
-      )
-    );
-  };
-
   // Wishlist functions
   const addToWishlist = (item: Omit<WishlistItem, 'addedAt'>) => {
     setWishlistItems(prev => {
@@ -129,29 +86,29 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         return prev; // Item already in wishlist
       }
       const newWishlist = [...prev, { ...item, addedAt: new Date() }];
-      localStorage.setItem('wishlist-items', JSON.stringify(newWishlist));
+      localStorage.setItem('udeh-wishlist', JSON.stringify(newWishlist));
       return newWishlist;
     });
   };
 
-  const removeFromWishlist = (id: number) => {
+  const removeFromWishlist = (id: string) => {
     setWishlistItems(prev => {
       const newWishlist = prev.filter(item => item.id !== id);
-      localStorage.setItem('wishlist-items', JSON.stringify(newWishlist));
+      localStorage.setItem('udeh-wishlist', JSON.stringify(newWishlist));
       return newWishlist;
     });
   };
 
   const clearWishlist = () => {
     setWishlistItems([]);
-    localStorage.removeItem('wishlist-items');
+    localStorage.removeItem('udeh-wishlist');
   };
 
-  const isInWishlist = (id: number) => {
+  const isInWishlist = (id: string) => {
     return wishlistItems.some(item => item.id === id);
   };
 
-  // Review functions
+  // Review functions (local storage since backend doesn't have reviews)
   const addReview = (review: Omit<Review, 'id' | 'createdAt' | 'helpful'>) => {
     const newReview: Review = {
       ...review,
@@ -162,18 +119,18 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     
     setReviews(prev => {
       const updated = [...prev, newReview];
-      localStorage.setItem('product-reviews', JSON.stringify(updated));
+      localStorage.setItem('udeh-reviews', JSON.stringify(updated));
       return updated;
     });
   };
 
-  const getProductReviews = (productId: number) => {
+  const getProductReviews = (productId: string) => {
     return reviews
       .filter(review => review.productId === productId)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   };
 
-  const getAverageRating = (productId: number) => {
+  const getAverageRating = (productId: string) => {
     const productReviews = getProductReviews(productId);
     if (productReviews.length === 0) return 0;
     
@@ -181,7 +138,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     return sum / productReviews.length;
   };
 
-  const getRatingCounts = (productId: number) => {
+  const getRatingCounts = (productId: string) => {
     const productReviews = getProductReviews(productId);
     const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     
@@ -199,7 +156,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           ? { ...review, helpful: review.helpful + 1 }
           : review
       );
-      localStorage.setItem('product-reviews', JSON.stringify(updated));
+      localStorage.setItem('udeh-reviews', JSON.stringify(updated));
       return updated;
     });
   };
@@ -208,17 +165,28 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const toggleNav = () => setIsNavOpen(prev => !prev);
   const closeNav = () => setIsNavOpen(false);
 
-  // Calculate cart count
-  const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  // Calculate counts
   const wishlistCount = wishlistItems.length;
+  
+  // Deprecated cart methods for backwards compatibility
+  const deprecatedCartMethods = {
+    cartItems: [], // Empty - use useCart hook instead
+    cartCount: 0, // Empty - use useCart hook instead
+    addToCart: async (item: any) => {
+      console.warn('addToCart from AppContext is deprecated. Use useCart hook instead.');
+    },
+    removeFromCart: async (id: string) => {
+      console.warn('removeFromCart from AppContext is deprecated. Use useCart hook instead.');
+    },
+    clearCart: async () => {
+      console.warn('clearCart from AppContext is deprecated. Use useCart hook instead.');
+    },
+    updateCartQuantity: async (id: string, quantity: number) => {
+      console.warn('updateCartQuantity from AppContext is deprecated. Use useCart hook instead.');
+    }
+  };
 
   const value: AppContextType = {
-    cartItems,
-    cartCount,
-    addToCart,
-    removeFromCart,
-    clearCart,
-    updateCartQuantity,
     wishlistItems,
     wishlistCount,
     addToWishlist,
@@ -234,6 +202,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     isNavOpen,
     toggleNav,
     closeNav,
+    ...deprecatedCartMethods
   };
 
   return (
@@ -253,4 +222,4 @@ export const useApp = () => {
 };
 
 // Export types
-export type { CartItem, WishlistItem, Review };
+export type { WishlistItem, Review };

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/hooks/useCart';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -24,6 +25,7 @@ const Signup = () => {
   
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { mergeGuestCart } = useCart();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +56,14 @@ const Signup = () => {
         email: formData.email,
         avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face'
       });
+
+      // Merge guest cart with new account
+      try {
+        await mergeGuestCart();
+      } catch (mergeError) {
+        console.error('Failed to merge guest cart:', mergeError);
+        // Don't block signup if merge fails
+      }
       
       navigate('/');
     } catch (err) {
@@ -63,7 +73,7 @@ const Signup = () => {
     }
   };
 
-  const handleGoogleSignup = () => {
+  const handleGoogleSignup = async () => {
     // Mock Google OAuth
     login({
       id: '4',
@@ -71,6 +81,15 @@ const Signup = () => {
       email: 'newuser@gmail.com',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face'
     });
+
+    // Merge guest cart with new account
+    try {
+      await mergeGuestCart();
+    } catch (mergeError) {
+      console.error('Failed to merge guest cart:', mergeError);
+      // Don't block signup if merge fails
+    }
+
     navigate('/');
   };
 

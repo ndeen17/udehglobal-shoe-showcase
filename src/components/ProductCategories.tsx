@@ -1,9 +1,104 @@
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
-import { getActiveCategories, getProductsByCategory } from '@/data/categories';
+import { 
+  ArrowRight, 
+  Package, 
+  Palette, 
+  Car, 
+  ShoppingBag, 
+  Smartphone, 
+  Laptop, 
+  Shirt, 
+  Dumbbell,
+  Home,
+  Sparkles,
+  Baby,
+  Trophy,
+  BookOpen,
+  Gamepad2,
+  Hammer,
+  PenTool,
+  Settings,
+  Watch
+} from 'lucide-react';
+import { categoriesAPI } from '@/services/api';
+import { Category } from '@/types/Category';
+import { useToast } from '@/components/ui/use-toast';
+
+// Icon mapping for categories
+const iconMap: { [key: string]: React.ComponentType<any> } = {
+  'Palette': Palette,
+  'Car': Car,
+  'ShoppingBag': ShoppingBag,
+  'Smartphone': Smartphone,
+  'Laptop': Laptop,
+  'Shirt': Shirt,
+  'Dumbbell': Dumbbell,
+  'Home': Home,
+  'Sparkles': Sparkles,
+  'Baby': Baby,
+  'Trophy': Trophy,
+  'BookOpen': BookOpen,
+  'Gamepad2': Gamepad2,
+  'Hammer': Hammer,
+  'PenTool': PenTool,
+  'Settings': Settings,
+  'Watch': Watch,
+  'Package': Package
+};
 
 const ProductCategories = () => {
-  const categories = getActiveCategories();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  useEffect(() => {
+    // Auto-retry on error with exponential backoff
+    if (error && retryCount < 3) {
+      const timeout = setTimeout(() => {
+        console.log(`Retrying to load categories... Attempt ${retryCount + 1}`);
+        loadCategories();
+      }, Math.min(1000 * Math.pow(2, retryCount), 10000)); // Max 10 seconds
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [error, retryCount]);
+
+  const loadCategories = async () => {
+    try {
+      setLoading(true);
+      setError(false);
+      const categoriesData = await categoriesAPI.getCategories();
+      
+      // Filter only active categories for storefront
+      const activeCategories = categoriesData
+        .filter(cat => cat.isActive)
+        .sort((a, b) => a.displayOrder - b.displayOrder);
+      
+      setCategories(activeCategories);
+      setRetryCount(0); // Reset retry count on success
+    } catch (error) {
+      console.error('Failed to load categories:', error);
+      setError(true);
+      setRetryCount(prev => prev + 1);
+      
+      if (retryCount >= 2) {
+        toast({
+          title: 'Connection Error',
+          description: 'Unable to load categories. Please check your connection.',
+          variant: 'destructive',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section id="products" className="bg-background py-8">
@@ -19,15 +114,41 @@ const ProductCategories = () => {
           </p>
         </div>
         
-        {/* Categories Grid */}
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8">
-            {categories.map((category) => {
-              const productCount = getProductsByCategory(category.slug).length;
-              
-              return (
+        {/* Loading State */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-12">
+            <Package className="h-8 w-8 text-gray-400 animate-pulse mb-2" />
+            <p className="text-sm text-gray-500">Loading categories...</p>
+            {retryCount > 0 && (
+              <p className="text-xs text-gray-400 mt-1">Retry attempt {retryCount}/3</p>
+            )}
+          </div>
+        ) : error && categories.length === 0 ? (
+          <div className="text-center py-12">
+            <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600 mb-2">Unable to load categories</p>
+            <button 
+              onClick={() => { setRetryCount(0); loadCategories(); }}
+              className="text-sm text-blue-600 hover:text-blue-700 underline"
+            >
+              Try again
+            </button>
+          </div>
+        ) : categories.length === 0 ? (
+          <div className="text-center py-12">
+            <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600">No active categories available</p>
+          </div>
+        ) : (
+          /* Categories Grid */
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8">
+              {categories.map((category) => {
+                const IconComponent = iconMap[category.iconName || 'Package'] || Package;
+                
+                return (
                 <Link
-                  key={category.id}
+                  key={category._id}
                   to={`/category/${category.slug}`}
                   className="group block"
                 >
@@ -36,7 +157,7 @@ const ProductCategories = () => {
                     
                     {/* Icon Container */}
                     <div className="aspect-square bg-gray-100 flex items-center justify-center mb-6 group-hover:bg-gray-200 transition-colors duration-300">
-                      <category.icon 
+                      <IconComponent 
                         className="w-12 h-12 text-gray-600 group-hover:text-gray-800 transition-colors duration-300"
                         strokeWidth={1}
                       />
@@ -51,7 +172,7 @@ const ProductCategories = () => {
                         {category.description}
                       </p>
                       <p className="brutalist-body text-xs tracking-wide text-gray-400">
-                        {productCount} ITEMS
+                        VIEW PRODUCTS
                       </p>
                     </div>
                     
@@ -65,10 +186,11 @@ const ProductCategories = () => {
                     
                   </div>
                 </Link>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
         
       </div>
     </section>

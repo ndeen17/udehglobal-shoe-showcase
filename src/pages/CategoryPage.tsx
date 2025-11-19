@@ -1,93 +1,169 @@
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useState, useMemo } from 'react';
-import { ArrowLeft } from 'lucide-react';
-import { getCategoryBySlug, getProductsByCategory, getAllProducts, getActiveCategories } from '@/data/categories';
-import ProductFilters, { FilterState } from '@/components/ProductFilters';
-import { useApp } from '@/contexts/AppContext';
+import { ArrowLeft, Package } from 'lucide-react';
+import { productsAPI, categoriesAPI } from '@/services/api';
+import { Product } from '@/types/Product';
+import { Category } from '@/types/Category';
+import { useToast } from '@/components/ui/use-toast';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import ProductCard from '@/components/ProductCard';
 
 const CategoryPage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { getAverageRating } = useApp();
+  const { toast } = useToast();
   
-  // Filter state
-  const [filters, setFilters] = useState<FilterState>({
-    category: slug || '',
-    priceRange: [0, 200000],
-    rating: 0,
-    inStock: null,
-    sortBy: 'name'
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [category, setCategory] = useState<Category | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  const [filters, setFilters] = useState({
+    priceRange: [0, 200000] as [number, number],
+    search: '',
+    sortBy: 'newest',
+    inStock: false,
   });
 
-  // Get all categories for filter dropdown
-  const allCategories = getActiveCategories().map(cat => cat.slug);
-  
-  // Get products based on current slug, or all products if viewing all categories
-  const baseProducts = !slug || slug === 'all' 
-    ? getAllProducts()
-    : getProductsByCategory(slug);
-  
-  // Apply filters to products (simplified for debugging)
-  const filteredProducts = useMemo(() => {
-    let result = [...baseProducts];
+  // Load data on component mount and when slug changes
+  useEffect(() => {
+    loadData();
+  }, [slug]);
 
-    // Apply category filter
-    if (filters.category && filters.category !== slug) {
-      result = getAllProducts().filter(p => p.category === filters.category);
-    }
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-    // Apply price filter
-    result = result.filter(p => {
-      const price = parseFloat(p.price.replace('₦', '').replace(',', ''));
-      return !isNaN(price) && price >= filters.priceRange[0] && price <= filters.priceRange[1];
-    });
+      // Load categories - filter only active ones for storefront
+      const categoriesData = await categoriesAPI.getCategories();
+      const activeCategories = categoriesData.filter(cat => cat.isActive);
+      setCategories(activeCategories);
 
-    // Apply rating filter
-    if (filters.rating > 0) {
-      result = result.filter(p => getAverageRating(p.id) >= filters.rating);
-    }
-
-    // Apply stock filter
-    if (filters.inStock !== null) {
-      result = result.filter(p => p.inStock === filters.inStock);
-    }
-
-    // Apply sorting
-    result.sort((a, b) => {
-      switch (filters.sortBy) {
-        case 'name':
-          return a.name.localeCompare(b.name);
-        case 'price-low':
-          const priceA = parseFloat(a.price.replace('₦', '').replace(',', ''));
-          const priceB = parseFloat(b.price.replace('₦', '').replace(',', ''));
-          return priceA - priceB;
-        case 'price-high':
-          const priceA2 = parseFloat(a.price.replace('₦', '').replace(',', ''));
-          const priceB2 = parseFloat(b.price.replace('₦', '').replace(',', ''));
-          return priceB2 - priceA2;
-        case 'rating':
-          return getAverageRating(b.id) - getAverageRating(a.id);
-        case 'newest':
-          return b.id - a.id;
-        default:
-          return 0;
+      if (slug && slug !== 'all') {
+        try {
+          // Load specific category and its products
+          const categoryData = await categoriesAPI.getCategoryBySlug(slug);
+          setCategory(categoryData);
+          
+          const productsData = await categoriesAPI.getProductsByCategory(slug, {
+            sortBy: filters.sortBy,
+            page: 1,
+            limit: 50
+          });
+          setProducts(productsData.products || []);
+        } catch (categoryError) {
+          console.error('Category not found:', categoryError);
+          const productsData = await productsAPI.getProducts({
+            sortBy: filters.sortBy,
+            page: 1,
+            limit: 50
+          });
+          setProducts(productsData.products || []);
+          setCategory(null);
+        }
+      } else {
+        // Load all products
+        const productsData = await productsAPI.getProducts({
+          sortBy: filters.sortBy,
+          page: 1,
+          limit: 50
+        });
+        setProducts(productsData.products || []);
+        setCategory(null);
       }
-    });
+    } catch (err) {
+      console.error('Error loading data:', err);
+      setError('Failed to load products');
+      setProducts([]);
+      toast({
+        title: 'Error',
+        description: 'Failed to load products. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return result;
-  }, [baseProducts, filters, getAverageRating, slug]);
+  // Filter and sort products
+  const filteredProducts = products.filter((product) => {
+    // Search filter
+    if (filters.search && !product.name.toLowerCase().includes(filters.search.toLowerCase())) {
+      return false;
+    }
+
+    // Price filter
+    if (product.price < filters.priceRange[0] || product.price > filters.priceRange[1]) {
+      return false;
+    }
+
+    // Stock filter
+    if (filters.inStock && !product.stockQuantity) {
+      return false;
+    }
+
+    return true;
+  }).sort((a, b) => {
+    switch (filters.sortBy) {
+      case 'name':
+        return a.name.localeCompare(b.name);
+      case 'price-low':
+        return a.price - b.price;
+      case 'price-high':
+        return b.price - a.price;
+      case 'newest':
+      default:
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }
+  });
+
   const clearFilters = () => {
     setFilters({
-      category: slug || '',
       priceRange: [0, 200000],
-      rating: 0,
-      inStock: null,
-      sortBy: 'name'
+      search: '',
+      sortBy: 'newest',
+      inStock: false,
     });
   };
-  
-  const category = slug ? getCategoryBySlug(slug) : null;
 
-  if (!category && slug) {
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background pt-20 px-8">
+        <div className="text-center pt-32">
+          <Package className="w-8 h-8 mx-auto mb-4 animate-pulse text-gray-400" />
+          <p className="brutalist-body text-sm tracking-wider text-gray-500">
+            LOADING PRODUCTS...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background pt-20 px-8">
+        <div className="text-center pt-32">
+          <h1 className="brutalist-heading text-lg tracking-widest text-foreground mb-8">
+            ERROR LOADING PRODUCTS
+          </h1>
+          <p className="brutalist-body text-sm tracking-wider text-gray-500 mb-4">
+            {error}
+          </p>
+          <Button onClick={loadData} variant="outline">
+            TRY AGAIN
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!category && slug && slug !== 'all') {
     return (
       <div className="min-h-screen bg-background pt-20 px-8">
         <div className="text-center pt-32">
@@ -133,80 +209,115 @@ const CategoryPage = () => {
           </p>
         </div>
 
-        {/* Product Filters */}
-        <ProductFilters
-          filters={filters}
-          onFiltersChange={setFilters}
-          onClearFilters={clearFilters}
-          categories={allCategories}
-        />
+        {/* Filters */}
+        <div className="max-w-4xl mx-auto mb-8 p-4 border border-gray-200">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            
+            {/* Search */}
+            <div>
+              <Label className="brutalist-body text-xs tracking-wider text-gray-600 mb-2">
+                SEARCH
+              </Label>
+              <Input
+                placeholder="Search products..."
+                value={filters.search}
+                onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                className="text-xs"
+              />
+            </div>
+
+            {/* Sort */}
+            <div>
+              <Label className="brutalist-body text-xs tracking-wider text-gray-600 mb-2">
+                SORT BY
+              </Label>
+              <Select 
+                value={filters.sortBy} 
+                onValueChange={(value) => setFilters(prev => ({ ...prev, sortBy: value }))}
+              >
+                <SelectTrigger className="text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="newest">Newest</SelectItem>
+                  <SelectItem value="name">Name A-Z</SelectItem>
+                  <SelectItem value="price-low">Price Low-High</SelectItem>
+                  <SelectItem value="price-high">Price High-Low</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Price Range */}
+            <div>
+              <Label className="brutalist-body text-xs tracking-wider text-gray-600 mb-2">
+                PRICE RANGE
+              </Label>
+              <Slider
+                value={filters.priceRange}
+                onValueChange={(value) => setFilters(prev => ({ ...prev, priceRange: value as [number, number] }))}
+                min={0}
+                max={200000}
+                step={5000}
+                className="mt-2"
+              />
+              <div className="flex justify-between mt-1">
+                <span className="text-xs text-gray-500">₦{filters.priceRange[0].toLocaleString()}</span>
+                <span className="text-xs text-gray-500">₦{filters.priceRange[1].toLocaleString()}</span>
+              </div>
+            </div>
+
+            {/* Stock Filter */}
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="inStock"
+                checked={filters.inStock}
+                onCheckedChange={(checked) => setFilters(prev => ({ ...prev, inStock: !!checked }))}
+              />
+              <Label htmlFor="inStock" className="brutalist-body text-xs tracking-wider text-gray-600">
+                IN STOCK ONLY
+              </Label>
+            </div>
+          </div>
+
+          {/* Clear Filters */}
+          <div className="mt-4 text-center">
+            <Button variant="outline" size="sm" onClick={clearFilters}>
+              CLEAR FILTERS
+            </Button>
+          </div>
+        </div>
 
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {filteredProducts.map((product) => (
-                <Link
-                  key={product.id}
-                  to={`/item/${product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}
-                  className="block group"
-                >
-                  <div className="bg-background">
-                    {/* Product Image */}
-                    <div className="aspect-square bg-gray-100 overflow-hidden mb-4">
-                      {product.image ? (
-                        <img 
-                          src={product.image} 
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                          <span className="brutalist-body text-xs text-gray-400 text-center p-4">
-                            {product.name.split(' ').slice(0, 2).join(' ')}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* Product Info */}
-                    <div className="text-center space-y-2">
-                      <h3 className="brutalist-body text-xs tracking-wider text-foreground group-hover:text-gray-500 transition-colors duration-300 line-clamp-2">
-                        {product.name.toUpperCase()}
-                      </h3>
-                      <p className="brutalist-body text-xs tracking-wide text-gray-500">
-                        {product.price}
-                      </p>
-                      {!product.inStock && (
-                        <p className="brutalist-body text-xs tracking-wide text-red-500">
-                          OUT OF STOCK
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </Link>
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                />
               ))}
             </div>
           </div>
         ) : (
           <div className="text-center py-16">
             <p className="brutalist-body text-sm tracking-wide text-gray-500">
-              {baseProducts.length === 0 ? 'COMING SOON' : 'NO PRODUCTS MATCH YOUR FILTERS'}
+              {products.length === 0 ? 'COMING SOON' : 'NO PRODUCTS MATCH YOUR FILTERS'}
             </p>
             <p className="brutalist-body text-xs tracking-wide text-gray-400 mt-2">
-              {baseProducts.length === 0 
+              {products.length === 0 
                 ? 'Products will be added to this category shortly' 
                 : 'Try adjusting your filter criteria'
               }
             </p>
-            {baseProducts.length > 0 && filteredProducts.length === 0 && (
-              <button 
+            {products.length > 0 && filteredProducts.length === 0 && (
+              <Button 
+                variant="outline"
                 onClick={clearFilters}
-                className="mt-4 brutalist-body text-xs tracking-wider text-foreground hover:text-gray-500 underline"
+                className="mt-4"
               >
                 CLEAR ALL FILTERS
-              </button>
+              </Button>
             )}
           </div>
         )}

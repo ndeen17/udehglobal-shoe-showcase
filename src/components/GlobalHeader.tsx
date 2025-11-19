@@ -1,13 +1,15 @@
 import { useApp } from '@/contexts/AppContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCartCount } from '@/hooks/useCart';
 import { Link } from 'react-router-dom';
 import { Plus, User, Clock, ShoppingBag, LogOut, Settings, Heart } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import NavigationOverlay from './NavigationOverlay';
 
 const GlobalHeader = () => {
-  const { cartCount, toggleNav, wishlistCount } = useApp();
+  const { toggleNav, wishlistCount } = useApp();
   const { user, isAuthenticated, logout } = useAuth();
+  const cartCount = useCartCount();
 
   const handleLogout = () => {
     logout();
