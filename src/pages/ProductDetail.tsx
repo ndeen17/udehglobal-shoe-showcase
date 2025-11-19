@@ -4,6 +4,7 @@ import { ArrowLeft, Heart, ShoppingBag, Star, Plus, Minus, Share2 } from 'lucide
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useApp } from '@/contexts/AppContext';
+import { useCart } from '@/hooks/useCart';
 import StarRating from '@/components/StarRating';
 import ReviewsList from '@/components/ReviewsList';
 import { productsAPI } from '@/services/api';
@@ -13,7 +14,8 @@ import { getProductId, getProductImageUrl, getProductName, getProductPrice, getP
 
 const ProductDetail = () => {
   const { slug } = useParams();
-  const { addToCart, addToWishlist, removeFromWishlist, isInWishlist, getAverageRating, getProductReviews } = useApp();
+  const { addToWishlist, removeFromWishlist, isInWishlist, getAverageRating, getProductReviews } = useApp();
+  const { addToCart, loading: cartLoading } = useCart();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [quantity, setQuantity] = useState(1);
@@ -29,13 +31,8 @@ const ProductDetail = () => {
         setLoading(true);
         setError(null);
         
-        // Try to get product by slug - we'll need to fetch all products and find the matching one
-        // since we don't have a direct getProductBySlug endpoint
-        const allProductsResponse = await productsAPI.getProducts();
-        const foundProduct = allProductsResponse.products.find(p => 
-          p.slug === slug || 
-          p.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') === slug
-        );
+        // Use the direct API endpoint to get product by slug
+        const foundProduct = await productsAPI.getProductBySlug(slug);
         
         if (!foundProduct) {
           setError('Product not found');
@@ -117,15 +114,26 @@ const ProductDetail = () => {
     );
   }
 
-  const handleAddToCart = () => {
-    const productId = getProductId(product);
-    for (let i = 0; i < quantity; i++) {
-      addToCart({
-        id: productId,
-        image: getProductImageUrl(product),
-        title: getProductName(product),
-        price: getProductPrice(product),
-        category: getProductCategory(product)
+  const handleAddToCart = async () => {
+    if (!product) return;
+    
+    try {
+      const productId = getProductId(product);
+      await addToCart({
+        productId: productId,
+        quantity: quantity
+      });
+      
+      toast({
+        title: 'Added to Cart',
+        description: `${quantity} ${quantity > 1 ? 'items' : 'item'} added to your cart.`,
+      });
+    } catch (error: any) {
+      console.error('Failed to add to cart:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to add item to cart. Please try again.',
+        variant: 'destructive',
       });
     }
   };
@@ -164,14 +172,14 @@ const ProductDetail = () => {
               {/* Header */}
               <div className="space-y-3 md:space-y-6">
                 <Badge variant="secondary" className="mb-2 md:mb-4">
-                  {product.category.toUpperCase()}
+                  {getProductCategory(product).toUpperCase()}
                 </Badge>
                 <h1 className="brutalist-heading text-xl md:text-2xl tracking-widest text-foreground">
                   {product.name.toUpperCase()}
                 </h1>
                 <div className="flex items-center gap-2 md:gap-4 flex-wrap">
                   <span className="brutalist-subheading text-base md:text-lg tracking-wider text-foreground">
-                    {product.price}
+                    ₦{product.price.toLocaleString()}
                   </span>
                   {product.stockQuantity > 0 ? (
                     <Badge variant="default" className="bg-green-100 text-green-800">
@@ -241,11 +249,11 @@ const ProductDetail = () => {
               <div className="space-y-3 md:space-y-4">
                 <Button 
                   onClick={handleAddToCart}
-                  disabled={product.stockQuantity <= 0}
+                  disabled={product.stockQuantity <= 0 || cartLoading}
                   className="w-full h-14 md:h-12 tracking-wider brutalist-body text-sm md:text-base"
                 >
                   <ShoppingBag className="w-4 h-4 mr-2" />
-                  ADD TO CART ({quantity})
+                  {cartLoading ? 'ADDING...' : `ADD TO CART (${quantity})`}
                 </Button>
                 
                 <div className="flex gap-2 md:gap-4">

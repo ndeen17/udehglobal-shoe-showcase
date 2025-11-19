@@ -78,6 +78,11 @@ const ProductCard = ({ product, id, image, title, price, category }: ProductCard
     }
   };
 
+  // Get product slug (use the slug field from MongoDB or generate from name)
+  const productSlug = product && 'slug' in product && product.slug 
+    ? product.slug 
+    : productName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
   return (
     <div 
       className="block group relative"
@@ -89,7 +94,7 @@ const ProductCard = ({ product, id, image, title, price, category }: ProductCard
         
         {/* Image taking maximum space */}
         <div className="aspect-square overflow-hidden bg-gray-100 relative">
-          <Link to={`/item/${productName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}>
+          <Link to={`/item/${productSlug}`}>
             <img 
               src={productImage} 
               alt={productName}
@@ -129,7 +134,7 @@ const ProductCard = ({ product, id, image, title, price, category }: ProductCard
         </div>
         
         {/* Minimal Text Label */}
-        <Link to={`/item/${productName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`}>
+        <Link to={`/item/${productSlug}`}>
           <div className="pt-2 pb-4 text-center">
             <h3 className="brutalist-body text-xs tracking-wider text-foreground">
               {productName.toUpperCase()}

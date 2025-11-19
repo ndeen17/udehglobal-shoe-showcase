@@ -128,7 +128,7 @@ Open browser console (F12) and navigate to frontend. Check for:
   - [ ] Verify images saved to `udehglobal-backend/public/uploads/products/`
   - [ ] Check product appears in list
 - [ ] Edit existing product:
-  - [ ] Open edit form
+  - [ ] Open edi  t form
   - [ ] Modify fields
   - [ ] Upload new images
   - [ ] Submit → Check updates saved

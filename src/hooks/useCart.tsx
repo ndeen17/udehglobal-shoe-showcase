@@ -72,120 +72,101 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const refreshCart = useCallback(async () => {
     try {
       setLoading(true);
-      const authenticated = checkAuthStatus();
 
-      if (authenticated) {
-        // Load authenticated user cart
-        const cartData = await cartService.getCart();
-        setCartWithHandling(cartData);
-      } else {
-        // Load guest cart from localStorage
-        const guestCart = guestCartService.getCart();
-        const displayCart = convertGuestCartToCart(guestCart.items);
-        setCartWithHandling(displayCart);
-      }
+      // Always load guest cart from localStorage - authentication only required at checkout
+      const guestCart = guestCartService.getCart();
+      const displayCart = convertGuestCartToCart(guestCart.items);
+      setCartWithHandling(displayCart);
+      setIsGuest(true);
     } catch (error: any) {
       handleError(error, 'load cart');
     } finally {
       setLoading(false);
     }
-  }, [checkAuthStatus, setCartWithHandling, handleError, convertGuestCartToCart]);
+  }, [setCartWithHandling, handleError, convertGuestCartToCart]);
 
   const addToCart = useCallback(async (request: AddToCartRequest) => {
     try {
       setLoading(true);
       setError(null);
-      const authenticated = checkAuthStatus();
 
-      if (authenticated) {
-        // Add to authenticated cart
-        const updatedCart = await cartService.addToCart(request);
-        setCartWithHandling(updatedCart);
-      } else {
-        // Add to guest cart
+      // Always use guest cart - authentication only required at checkout
+      try {
+        const { productsAPI } = await import('../services/api');
+        const allProducts = await productsAPI.getProducts({ limit: 1000 });
+        const product = allProducts.products.find(p => p._id === request.productId);
+        
+        guestCartService.addItem(
+          request.productId,
+          request.quantity,
+          request.variantId,
+          product
+        );
+      } catch (fetchError) {
+        // Even if product fetch fails, add to cart without product data
+        console.warn('Could not fetch product data for guest cart:', fetchError);
         guestCartService.addItem(
           request.productId,
           request.quantity,
           request.variantId
         );
-        await refreshCart(); // Refresh to show updated guest cart
       }
+      await refreshCart(); // Refresh to show updated guest cart
     } catch (error: any) {
       handleError(error, 'add item to cart');
       throw error; // Re-throw for component handling
     } finally {
       setLoading(false);
     }
-  }, [checkAuthStatus, setCartWithHandling, handleError, refreshCart]);
+  }, [handleError, refreshCart]);
 
   const updateCartItem = useCallback(async (productId: string, request: UpdateCartRequest) => {
     try {
       setLoading(true);
       setError(null);
-      const authenticated = checkAuthStatus();
 
-      if (authenticated) {
-        // Update authenticated cart
-        const updatedCart = await cartService.updateCartItem(productId, request);
-        setCartWithHandling(updatedCart);
-      } else {
-        // Update guest cart
-        guestCartService.updateItem(productId, request.quantity, request.variantId);
-        await refreshCart(); // Refresh to show updated guest cart
-      }
+      // Always use guest cart - authentication only required at checkout
+      guestCartService.updateItem(productId, request.quantity, request.variantId);
+      await refreshCart(); // Refresh to show updated guest cart
     } catch (error: any) {
       handleError(error, 'update cart item');
       throw error;
     } finally {
       setLoading(false);
     }
-  }, [checkAuthStatus, setCartWithHandling, handleError, refreshCart]);
+  }, [handleError, refreshCart]);
 
   const removeFromCart = useCallback(async (productId: string, variantId?: string) => {
     try {
       setLoading(true);
       setError(null);
-      const authenticated = checkAuthStatus();
 
-      if (authenticated) {
-        // Remove from authenticated cart
-        const updatedCart = await cartService.removeFromCart(productId, variantId);
-        setCartWithHandling(updatedCart);
-      } else {
-        // Remove from guest cart
-        guestCartService.removeItem(productId, variantId);
-        await refreshCart(); // Refresh to show updated guest cart
-      }
+      // Always use guest cart - authentication only required at checkout
+      guestCartService.removeItem(productId, variantId);
+      await refreshCart(); // Refresh to show updated guest cart
     } catch (error: any) {
       handleError(error, 'remove item from cart');
       throw error;
     } finally {
       setLoading(false);
     }
-  }, [checkAuthStatus, setCartWithHandling, handleError, refreshCart]);
+  }, [handleError, refreshCart]);
 
   const clearCart = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const authenticated = checkAuthStatus();
 
-      if (authenticated) {
-        // Clear authenticated cart
-        const updatedCart = await cartService.clearCart();
-        setCartWithHandling(updatedCart);
-      } else {
-        // Clear guest cart
-        guestCartService.clearCart();
-        await refreshCart(); // Refresh to show empty cart
-      }
+      // Always use guest cart - authentication only required at checkout
+      guestCartService.clearCart();
+      await refreshCart(); // Refresh to show empty cart
     } catch (error: any) {
       handleError(error, 'clear cart');
       throw error;
     } finally {
       setLoading(false);
     }
-  }, [checkAuthStatus, setCartWithHandling, handleError, refreshCart]);
+  }, [handleError, refreshCart]);
 
   // Merge guest cart with authenticated cart (called after login)
   const mergeGuestCart = useCallback(async () => {
@@ -230,21 +211,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Helper functions
   const getItemQuantity = useCallback((productId: string, variantId?: string): number => {
-    const authenticated = checkAuthStatus();
-    
-    if (authenticated) {
-      // Get from authenticated cart
-      if (!cart) return 0;
-      const item = cart.items.find(item => 
-        item.product._id === productId && 
-        (!variantId || (item.variant && item.variant._id === variantId))
-      );
-      return item ? item.quantity : 0;
-    } else {
-      // Get from guest cart
-      return guestCartService.getItemQuantity(productId, variantId);
-    }
-  }, [cart, checkAuthStatus]);
+    // Always use guest cart - authentication only required at checkout
+    return guestCartService.getItemQuantity(productId, variantId);
+  }, []);
 
   const isInCart = useCallback((productId: string, variantId?: string): boolean => {
     return getItemQuantity(productId, variantId) > 0;

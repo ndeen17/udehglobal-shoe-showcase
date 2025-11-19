@@ -12,7 +12,12 @@ import {
 import { useAdminAuth } from '../context/AdminAuthContext';
 import { Button } from '../../components/ui/button';
 
-const AdminSidebar: React.FC = () => {
+interface AdminSidebarProps {
+  isMobileMenuOpen: boolean;
+  onClose: () => void;
+}
+
+const AdminSidebar: React.FC<AdminSidebarProps> = ({ isMobileMenuOpen, onClose }) => {
   const { admin, logout } = useAdminAuth();
   const navigate = useNavigate();
 
@@ -55,7 +60,23 @@ const AdminSidebar: React.FC = () => {
   ];
 
   return (
-    <div className="w-64 bg-black border-r border-white/10 min-h-screen flex flex-col">
+    <>
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={onClose}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={`
+        w-64 bg-black border-r border-white/10 min-h-screen flex flex-col
+        fixed lg:static inset-y-0 left-0 z-40
+        transform transition-transform duration-300 ease-in-out
+        lg:transform-none
+        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
       {/* Admin Brand */}
       <div className="p-6 border-b border-white/10">
         <div className="flex items-center space-x-3">
@@ -92,6 +113,7 @@ const AdminSidebar: React.FC = () => {
               key={item.name}
               to={item.href}
               end={item.href === '/admin'}
+              onClick={onClose}
               className={({ isActive }) =>
                 `flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors group ${
                   isActive
@@ -129,7 +151,8 @@ const AdminSidebar: React.FC = () => {
           <span>Sign Out</span>
         </Button>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

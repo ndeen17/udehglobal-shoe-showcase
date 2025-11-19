@@ -28,7 +28,12 @@ export const getProductImageUrl = (product: Product | LegacyProduct): string => 
   if (isLegacyProduct(product)) {
     return product.image;
   }
-  return product.images?.[0]?.url || '/placeholder-product.jpg';
+  
+  const imageUrl = product.images?.[0]?.url || '/placeholder-product.jpg';
+  
+  // Cloudinary URLs are already full URLs (https://res.cloudinary.com/...)
+  // Return as is - no need to prepend backend URL
+  return imageUrl;
 };
 
 // Get product price regardless of format
@@ -46,6 +51,13 @@ export const getProductName = (product: Product | LegacyProduct): string => {
 
 // Get product category regardless of format
 export const getProductCategory = (product: Product | LegacyProduct): string => {
+  if (typeof product.category === 'string') {
+    return product.category;
+  }
+  // Handle populated category object from backend
+  if (product.category && typeof product.category === 'object' && 'name' in product.category) {
+    return (product.category as any).name;
+  }
   return product.category;
 };
 
@@ -70,7 +82,8 @@ export const getProductReviewsCount = (product: Product | LegacyProduct): number
   if (isLegacyProduct(product)) {
     return product.reviews || 0;
   }
-  return product.reviewCount || 0;
+  // Reviews not yet implemented in backend
+  return 0;
 };
 
 // Convert legacy product to MongoDB format (for migration)
@@ -108,7 +121,7 @@ export const mongoToLegacyProduct = (mongoProduct: Product): LegacyProduct => {
     category: mongoProduct.category,
     stock: mongoProduct.stockQuantity,
     status: mongoProduct.isActive ? 'active' : 'inactive',
-    reviews: mongoProduct.reviewCount || 0
+    reviews: 0 // Reviews not yet implemented in backend
   };
 };
 

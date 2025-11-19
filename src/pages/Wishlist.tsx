@@ -2,24 +2,51 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Heart, ShoppingCart, X, Trash2 } from 'lucide-react';
 import { useApp } from '@/contexts/AppContext';
+import { useCart } from '@/hooks/useCart';
 import { Button } from '@/components/ui/button';
+import { toast } from '@/hooks/use-toast';
 
 const Wishlist = () => {
-  const { wishlistItems, wishlistCount, removeFromWishlist, addToCart, clearWishlist } = useApp();
+  const { wishlistItems, wishlistCount, removeFromWishlist, clearWishlist } = useApp();
+  const { addToCart } = useCart();
 
-  const handleAddToCart = (item: typeof wishlistItems[0]) => {
-    addToCart({
-      id: item.id,
-      title: item.title,
-      price: item.price,
-      image: item.image,
-      category: item.category
-    });
+  const handleAddToCart = async (item: typeof wishlistItems[0]) => {
+    try {
+      await addToCart({
+        productId: item.id, // item.id is the MongoDB product ID
+        quantity: 1
+      });
+      toast({
+        title: 'Added to cart',
+        description: `${item.title} has been added to your cart.`,
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to add item to cart. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
-  const handleMoveToCart = (item: typeof wishlistItems[0]) => {
-    handleAddToCart(item);
-    removeFromWishlist(item.id);
+  const handleMoveToCart = async (item: typeof wishlistItems[0]) => {
+    try {
+      await addToCart({
+        productId: item.id, // item.id is the MongoDB product ID
+        quantity: 1
+      });
+      removeFromWishlist(item.id);
+      toast({
+        title: 'Moved to cart',
+        description: `${item.title} has been moved to your cart.`,
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to move item to cart. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   if (wishlistCount === 0) {
@@ -129,7 +156,7 @@ const Wishlist = () => {
                         </h3>
                       </Link>
                       <p className="brutalist-body text-xs tracking-wide text-gray-500 mt-1">
-                        {item.category}
+                        {typeof item.category === 'string' ? item.category : (item.category as any)?.name || 'Unknown'}
                       </p>
                     </div>
 
