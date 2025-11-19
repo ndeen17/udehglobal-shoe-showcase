@@ -106,49 +106,49 @@ const Checkout = () => {
   return (
     <div className="min-h-screen bg-background pt-20">
       {/* Back Navigation */}
-      <div className="px-8 pt-8">
+      <div className="px-4 md:px-8 pt-4 md:pt-8">
         <Link 
           to="/cart"
-          className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300"
+          className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300 py-2"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={1} />
           <span>BACK TO CART</span>
         </Link>
       </div>
 
-      <div className="px-8 py-16">
+      <div className="px-4 md:px-8 py-8 md:py-16">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-16">
             
             {/* Main Content - Left Column */}
             <div className="lg:col-span-2 space-y-12">
               
               {/* Progress Steps */}
-              <div className="flex items-center space-x-8">
-                <div className={`flex items-center space-x-2 ${step === 'shipping' ? 'text-foreground' : step === 'payment' || step === 'review' ? 'text-green-600' : 'text-gray-400'}`}>
-                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs ${step === 'shipping' ? 'border-foreground' : step === 'payment' || step === 'review' ? 'border-green-600 bg-green-600 text-white' : 'border-gray-400'}`}>
+              <div className="flex items-center space-x-4 md:space-x-8 overflow-x-auto pb-2">
+                <div className={`flex items-center space-x-1 md:space-x-2 flex-shrink-0 ${step === 'shipping' ? 'text-foreground' : step === 'payment' || step === 'review' ? 'text-green-600' : 'text-gray-400'}`}>
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs flex-shrink-0 ${step === 'shipping' ? 'border-foreground' : step === 'payment' || step === 'review' ? 'border-green-600 bg-green-600 text-white' : 'border-gray-400'}`}>
                     {step === 'payment' || step === 'review' ? '✓' : '1'}
                   </div>
-                  <span className="text-sm tracking-wide">SHIPPING</span>
+                  <span className="text-xs md:text-sm tracking-wide whitespace-nowrap">SHIPPING</span>
                 </div>
-                <div className={`flex items-center space-x-2 ${step === 'payment' ? 'text-foreground' : step === 'review' ? 'text-green-600' : 'text-gray-400'}`}>
-                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs ${step === 'payment' ? 'border-foreground' : step === 'review' ? 'border-green-600 bg-green-600 text-white' : 'border-gray-400'}`}>
+                <div className={`flex items-center space-x-1 md:space-x-2 flex-shrink-0 ${step === 'payment' ? 'text-foreground' : step === 'review' ? 'text-green-600' : 'text-gray-400'}`}>
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs flex-shrink-0 ${step === 'payment' ? 'border-foreground' : step === 'review' ? 'border-green-600 bg-green-600 text-white' : 'border-gray-400'}`}>
                     {step === 'review' ? '✓' : '2'}
                   </div>
-                  <span className="text-sm tracking-wide">PAYMENT</span>
+                  <span className="text-xs md:text-sm tracking-wide whitespace-nowrap">PAYMENT</span>
                 </div>
-                <div className={`flex items-center space-x-2 ${step === 'review' ? 'text-foreground' : 'text-gray-400'}`}>
-                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs ${step === 'review' ? 'border-foreground' : 'border-gray-400'}`}>
+                <div className={`flex items-center space-x-1 md:space-x-2 flex-shrink-0 ${step === 'review' ? 'text-foreground' : 'text-gray-400'}`}>
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs flex-shrink-0 ${step === 'review' ? 'border-foreground' : 'border-gray-400'}`}>
                     3
                   </div>
-                  <span className="text-sm tracking-wide">REVIEW</span>
+                  <span className="text-xs md:text-sm tracking-wide whitespace-nowrap">REVIEW</span>
                 </div>
               </div>
 
               {/* Step Content */}
               {step === 'shipping' && (
                 <div>
-                  <h2 className="brutalist-heading text-lg tracking-widest text-foreground mb-8">
+                  <h2 className="brutalist-heading text-base md:text-lg tracking-widest text-foreground mb-6 md:mb-8">
                     SHIPPING INFORMATION
                   </h2>
                   
@@ -268,7 +268,7 @@ const Checkout = () => {
 
                     <Button 
                       type="submit"
-                      className="w-full md:w-auto bg-black text-white hover:bg-gray-800"
+                      className="w-full md:w-auto bg-black text-white hover:bg-gray-800 h-12 md:h-10"
                     >
                       CONTINUE TO PAYMENT
                     </Button>

@@ -131,13 +131,13 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pt-20">
+    <div className="min-h-screen bg-background pt-16 md:pt-20">
       
       {/* Back Navigation */}
-      <div className="px-8 pt-8">
+      <div className="px-4 md:px-8 pt-4 md:pt-8">
         <Link 
           to="/"
-          className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300"
+          className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300 py-2"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={1} />
           <span>BACK</span>
@@ -145,9 +145,9 @@ const ProductDetail = () => {
       </div>
 
       {/* Product Detail Content */}
-      <div className="px-8 py-16">
+      <div className="px-4 md:px-8 py-8 md:py-16">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16">
             
             {/* Product Image */}
             <div className="aspect-square bg-gray-100">
@@ -159,18 +159,18 @@ const ProductDetail = () => {
             </div>
 
             {/* Product Info */}
-            <div className="flex flex-col justify-center space-y-12">
+            <div className="flex flex-col justify-center space-y-6 md:space-y-12">
               
               {/* Header */}
-              <div className="space-y-6">
-                <Badge variant="secondary" className="mb-4">
+              <div className="space-y-3 md:space-y-6">
+                <Badge variant="secondary" className="mb-2 md:mb-4">
                   {product.category.toUpperCase()}
                 </Badge>
-                <h1 className="brutalist-heading text-2xl tracking-widest text-foreground">
+                <h1 className="brutalist-heading text-xl md:text-2xl tracking-widest text-foreground">
                   {product.name.toUpperCase()}
                 </h1>
-                <div className="flex items-center gap-4">
-                  <span className="brutalist-subheading text-lg tracking-wider text-foreground">
+                <div className="flex items-center gap-2 md:gap-4 flex-wrap">
+                  <span className="brutalist-subheading text-base md:text-lg tracking-wider text-foreground">
                     {product.price}
                   </span>
                   {product.stockQuantity > 0 ? (
@@ -211,7 +211,7 @@ const ProductDetail = () => {
               </div>
 
               {/* Quantity Selector */}
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 <label className="brutalist-body text-sm tracking-wider text-foreground">
                   QUANTITY
                 </label>
@@ -219,17 +219,17 @@ const ProductDetail = () => {
                   <div className="flex items-center border">
                     <button
                       onClick={() => handleQuantityChange(false)}
-                      className="p-3 hover:bg-gray-100 transition-colors"
+                      className="p-3 md:p-3 hover:bg-gray-100 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                       disabled={quantity <= 1}
                     >
-                      <Minus className="w-4 h-4" />
+                      <Minus className="w-5 h-5 md:w-4 md:h-4" />
                     </button>
-                    <span className="px-6 py-3 brutalist-body text-sm tracking-wider min-w-[60px] text-center">
+                    <span className="px-4 md:px-6 py-3 brutalist-body text-sm tracking-wider min-w-[60px] text-center">
                       {quantity}
                     </span>
                     <button
                       onClick={() => handleQuantityChange(true)}
-                      className="p-3 hover:bg-gray-100 transition-colors"
+                      className="p-3 md:p-3 hover:bg-gray-100 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
                     >
                       <Plus className="w-4 h-4" />
                     </button>
@@ -238,35 +238,35 @@ const ProductDetail = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 <Button 
                   onClick={handleAddToCart}
                   disabled={product.stockQuantity <= 0}
-                  className="w-full h-12 tracking-wider brutalist-body"
+                  className="w-full h-14 md:h-12 tracking-wider brutalist-body text-sm md:text-base"
                 >
                   <ShoppingBag className="w-4 h-4 mr-2" />
                   ADD TO CART ({quantity})
                 </Button>
                 
-                <div className="flex gap-4">
+                <div className="flex gap-2 md:gap-4">
                   <Button
                     variant="outline"
                     onClick={handleToggleWishlist}
-                    className="flex-1 h-12 tracking-wider"
+                    className="flex-1 h-14 md:h-12 tracking-wider text-xs sm:text-sm"
                   >
                     <Heart className={`w-4 h-4 mr-2 ${inWishlist ? 'fill-current text-red-500' : ''}`} />
                     {inWishlist ? 'WISHLISTED' : 'ADD TO WISHLIST'}
                   </Button>
                   
-                  <Button variant="outline" size="icon" className="h-12 w-12">
+                  <Button variant="outline" size="icon" className="h-14 md:h-12 w-14 md:w-12 min-w-[56px] min-h-[56px] md:min-w-[48px] md:min-h-[48px]">
                     <Share2 className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
 
               {/* Product Features */}
-              <div className="border-t pt-8">
-                <h3 className="brutalist-body text-sm tracking-wider text-foreground mb-4">
+              <div className="border-t pt-6 md:pt-8">
+                <h3 className="brutalist-body text-xs md:text-sm tracking-wider text-foreground mb-3 md:mb-4">
                   PRODUCT FEATURES
                 </h3>
                 <div className="space-y-2">
@@ -293,7 +293,7 @@ const ProductDetail = () => {
           </div>
           
           {/* Reviews Section */}
-          <div className="mt-16 pt-16 border-t border-gray-200">
+          <div className="mt-8 md:mt-16 pt-8 md:pt-16 border-t border-gray-200">
             <ReviewsList 
               productId={getProductId(product)} 
               productName={getProductName(product)} 

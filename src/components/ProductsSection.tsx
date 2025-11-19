@@ -36,11 +36,11 @@ const ProductsSection = () => {
   return (
     <section id="products" className="bg-background">
       {/* Yeezy-Style High-Density Grid */}
-      <div className="px-8 pb-32">
+      <div className="px-4 md:px-8 pb-16 md:pb-32">
         
         {/* Minimal Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="brutalist-subheading text-lg tracking-widest text-foreground">
+        <div className="text-center mb-8 md:mb-16">
+          <h2 className="brutalist-subheading text-base md:text-lg tracking-widest text-foreground">
             PRODUCTS
           </h2>
         </div>
@@ -65,7 +65,7 @@ const ProductsSection = () => {
         
         {/* High-Density Product Grid */}
         {!loading && !error && (
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 md:gap-3">
             {products.map((product) => (
               <ProductCard
                 key={product._id}

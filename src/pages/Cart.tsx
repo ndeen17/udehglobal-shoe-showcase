@@ -42,8 +42,8 @@ const Cart = () => {
 
   if (cartCount === 0) {
     return (
-      <div className="min-h-screen bg-background pt-20 px-8">
-        <div className="pt-8">
+      <div className="min-h-screen bg-background pt-16 md:pt-20 px-4 md:px-8">
+        <div className="pt-4 md:pt-8">
           <Link 
             to="/"
             className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300"
@@ -53,9 +53,9 @@ const Cart = () => {
           </Link>
         </div>
         
-        <div className="text-center pt-32">
-          <ShoppingBag className="w-16 h-16 mx-auto text-gray-300 mb-8" strokeWidth={1} />
-          <h1 className="brutalist-heading text-lg tracking-widest text-foreground mb-4">
+        <div className="text-center pt-16 md:pt-32">
+          <ShoppingBag className="w-12 h-12 md:w-16 md:h-16 mx-auto text-gray-300 mb-6 md:mb-8" strokeWidth={1} />
+          <h1 className="brutalist-heading text-base md:text-lg tracking-widest text-foreground mb-4">
             YOUR CART IS EMPTY
           </h1>
           <p className="brutalist-body text-sm tracking-wide text-gray-500 mb-8">
@@ -73,13 +73,13 @@ const Cart = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pt-20">
+    <div className="min-h-screen bg-background pt-16 md:pt-20">
       
       {/* Back Navigation */}
-      <div className="px-8 pt-8">
+      <div className="px-4 md:px-8 pt-4 md:pt-8">
         <Link 
           to="/"
-          className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300"
+          className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300 py-2"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={1} />
           <span>BACK</span>
@@ -87,15 +87,15 @@ const Cart = () => {
       </div>
 
       {/* Cart Content */}
-      <div className="px-8 py-16">
+      <div className="px-4 md:px-8 py-8 md:py-16">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-16">
             
             {/* Cart Items - Left Column */}
             <div className="lg:col-span-2">
               {/* Cart Header */}
-              <div className="mb-16">
-                <h1 className="brutalist-heading text-lg tracking-widest text-foreground mb-4">
+              <div className="mb-8 md:mb-16">
+                <h1 className="brutalist-heading text-base md:text-lg tracking-widest text-foreground mb-4">
                   SHOPPING CART ({cartCount})
                 </h1>
                 <div className="flex gap-8 text-xs tracking-wide text-gray-500">
@@ -111,12 +111,12 @@ const Cart = () => {
               </div>
 
               {/* Cart Items */}
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="grid grid-cols-12 gap-4 items-center border-t border-gray-200 pt-6">
+                  <div key={item.id} className="grid grid-cols-12 gap-3 md:gap-4 items-center border-t border-gray-200 pt-4 md:pt-6">
                     
                     {/* Item Image */}
-                    <div className="col-span-3">
+                    <div className="col-span-4 md:col-span-3">
                       <div className="aspect-square bg-gray-100">
                         <img 
                           src={item.image} 
@@ -127,8 +127,8 @@ const Cart = () => {
                     </div>
 
                     {/* Item Details */}
-                    <div className="col-span-6 space-y-2">
-                      <h3 className="brutalist-body text-sm tracking-wider text-foreground">
+                    <div className="col-span-5 md:col-span-6 space-y-1 md:space-y-2">
+                      <h3 className="brutalist-body text-xs md:text-sm tracking-wider text-foreground">
                         {item.title.toUpperCase()}
                       </h3>
                       <p className="brutalist-body text-xs tracking-wide text-gray-500">
@@ -144,14 +144,14 @@ const Cart = () => {
                       <div className="flex items-center border border-gray-200">
                         <button
                           onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                          className="p-2 hover:bg-gray-50 transition-colors"
+                          className="p-2 hover:bg-gray-50 transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
-                        <span className="px-4 py-2 text-sm">{item.quantity}</span>
+                        <span className="px-2 md:px-4 py-2 text-xs md:text-sm min-w-[32px] text-center">{item.quantity}</span>
                         <button
                           onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                          className="p-2 hover:bg-gray-50 transition-colors"
+                          className="p-2 hover:bg-gray-50 transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center"
                         >
                           <Plus className="w-3 h-3" />
                         </button>
@@ -162,10 +162,10 @@ const Cart = () => {
                     <div className="col-span-1 text-right">
                       <button
                         onClick={() => removeFromCart(item.id)}
-                        className="p-2 hover:bg-gray-50 transition-colors"
+                        className="p-2 hover:bg-gray-50 transition-colors min-w-[40px] min-h-[40px] flex items-center justify-center ml-auto"
                         aria-label="Remove item"
                       >
-                        <X className="w-4 h-4 text-gray-500 hover:text-foreground" strokeWidth={1} />
+                        <X className="w-5 h-5 md:w-4 md:h-4 text-gray-500 hover:text-foreground" strokeWidth={1} />
                       </button>
                     </div>
                   </div>

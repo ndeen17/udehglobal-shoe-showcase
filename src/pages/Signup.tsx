@@ -94,9 +94,9 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pt-20">
+    <div className="min-h-screen bg-background pt-16 md:pt-20">
       {/* Back Navigation */}
-      <div className="px-8 pt-8">
+      <div className="px-4 md:px-8 pt-4 md:pt-8">
         <Link 
           to="/"
           className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300"
@@ -109,8 +109,8 @@ const Signup = () => {
       <div className="px-8 py-16">
         <div className="max-w-md mx-auto">
           {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="brutalist-heading text-lg tracking-widest text-foreground mb-4">
+          <div className="text-center mb-8 md:mb-12">
+            <h1 className="brutalist-heading text-xl md:text-2xl tracking-widest text-foreground mb-4">
               CREATE ACCOUNT
             </h1>
             <p className="brutalist-body text-sm tracking-wide text-gray-500">
@@ -119,7 +119,7 @@ const Signup = () => {
           </div>
 
           {/* Signup Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 text-sm">
                 {error}

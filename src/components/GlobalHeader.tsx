@@ -19,26 +19,26 @@ const GlobalHeader = () => {
     <>
       {/* Fixed Header */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-background border-0">
-        <div className="flex items-center justify-between px-8 py-4">
+        <div className="flex items-center justify-between px-4 md:px-8 py-3 md:py-4">
           
           {/* Left: Hamburger/Plus Icon */}
           <button
             onClick={toggleNav}
-            className="p-2 hover:bg-transparent transition-none"
+            className="p-2 hover:bg-transparent transition-none min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="Open navigation"
           >
             <Plus 
-              className="w-5 h-5 text-foreground" 
+              className="w-6 h-6 md:w-5 md:h-5 text-foreground" 
               strokeWidth={1}
             />
           </button>
 
           {/* Center: Utility Icons */}
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-4 md:space-x-8">
             {/* Account/User Menu */}
             {isAuthenticated ? (
               <DropdownMenu>
-                <DropdownMenuTrigger className="p-2 hover:bg-transparent transition-none">
+                <DropdownMenuTrigger className="p-2 hover:bg-transparent transition-none min-w-[44px] min-h-[44px] flex items-center justify-center">
                   <div className="flex items-center space-x-2">
                     {user?.avatar ? (
                       <img 
@@ -48,7 +48,7 @@ const GlobalHeader = () => {
                       />
                     ) : (
                       <User 
-                        className="w-4 h-4 text-foreground" 
+                        className="w-5 h-5 md:w-4 md:h-4 text-foreground" 
                         strokeWidth={1}
                       />
                     )}
@@ -87,11 +87,11 @@ const GlobalHeader = () => {
             ) : (
               <Link 
                 to="/login" 
-                className="p-2 hover:bg-transparent transition-none"
+                className="p-2 hover:bg-transparent transition-none min-w-[44px] min-h-[44px] flex items-center justify-center"
                 aria-label="Sign In"
               >
                 <User 
-                  className="w-4 h-4 text-foreground" 
+                  className="w-5 h-5 md:w-4 md:h-4 text-foreground" 
                   strokeWidth={1}
                 />
               </Link>
@@ -99,11 +99,11 @@ const GlobalHeader = () => {
             
             <Link 
               to="/history" 
-              className="p-2 hover:bg-transparent transition-none"
+              className="p-2 hover:bg-transparent transition-none min-w-[44px] min-h-[44px] hidden sm:flex items-center justify-center"
               aria-label="History"
             >
               <Clock 
-                className="w-4 h-4 text-foreground" 
+                className="w-5 h-5 md:w-4 md:h-4 text-foreground" 
                 strokeWidth={1}
               />
             </Link>
@@ -111,11 +111,11 @@ const GlobalHeader = () => {
             {/* Wishlist Icon with Count */}
             <Link 
               to="/wishlist" 
-              className="relative p-2 hover:bg-transparent transition-none"
+              className="relative p-2 hover:bg-transparent transition-none min-w-[44px] min-h-[44px] flex items-center justify-center"
               aria-label={`Wishlist with ${wishlistCount} items`}
             >
               <Heart 
-                className="w-4 h-4 text-foreground" 
+                className="w-5 h-5 md:w-4 md:h-4 text-foreground" 
                 strokeWidth={1}
               />
               {wishlistCount > 0 && (
@@ -127,11 +127,11 @@ const GlobalHeader = () => {
             
             <Link 
               to="/info" 
-              className="p-2 hover:bg-transparent transition-none"
+              className="p-2 hover:bg-transparent transition-none min-w-[44px] min-h-[44px] hidden md:flex items-center justify-center"
               aria-label="Information"
             >
               <ShoppingBag 
-                className="w-4 h-4 text-foreground" 
+                className="w-5 h-5 md:w-4 md:h-4 text-foreground" 
                 strokeWidth={1}
               />
             </Link>
@@ -140,11 +140,11 @@ const GlobalHeader = () => {
           {/* Right: Cart Icon with Count */}
           <Link 
             to="/cart" 
-            className="relative p-2 hover:bg-transparent transition-none"
+            className="relative p-2 hover:bg-transparent transition-none min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label={`Cart with ${cartCount} items`}
           >
             <ShoppingBag 
-              className="w-5 h-5 text-foreground" 
+              className="w-6 h-6 md:w-5 md:h-5 text-foreground" 
               strokeWidth={1}
             />
             {cartCount > 0 && (

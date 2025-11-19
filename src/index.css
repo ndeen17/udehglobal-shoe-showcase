@@ -143,3 +143,81 @@ All colors MUST be HSL.
     text-transform: uppercase;
   }
 }
+
+/* Mobile-Specific Utilities */
+@layer utilities {
+  /* Touch-friendly tap targets - minimum 44x44px */
+  .touch-target {
+    @apply min-w-[44px] min-h-[44px] inline-flex items-center justify-center;
+  }
+  
+  .touch-target-lg {
+    @apply min-w-[56px] min-h-[56px] inline-flex items-center justify-center;
+  }
+  
+  /* Mobile container with safe padding */
+  .mobile-container {
+    @apply px-4 md:px-8;
+  }
+  
+  .mobile-container-lg {
+    @apply px-6 md:px-12;
+  }
+  
+  /* Mobile-specific spacing */
+  .mobile-stack {
+    @apply flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4;
+  }
+  
+  /* Prevent text selection on buttons for better mobile UX */
+  .no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Smooth scrolling for touch devices */
+  .smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Hide scrollbar but keep functionality */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Mobile-optimized text sizes */
+  .mobile-text-xs {
+    @apply text-[10px] md:text-xs;
+  }
+  
+  .mobile-text-sm {
+    @apply text-xs md:text-sm;
+  }
+  
+  .mobile-text-base {
+    @apply text-sm md:text-base;
+  }
+  
+  .mobile-text-lg {
+    @apply text-base md:text-lg;
+  }
+  
+  /* Full-width buttons on mobile */
+  .mobile-full-button {
+    @apply w-full md:w-auto;
+  }
+  
+  /* Mobile-friendly form inputs - prevent zoom on iOS */
+  .mobile-input {
+    @apply text-base;
+  }
+}

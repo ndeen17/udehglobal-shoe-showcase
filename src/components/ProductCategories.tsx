@@ -101,12 +101,12 @@ const ProductCategories = () => {
   };
 
   return (
-    <section id="products" className="bg-background py-8">
-      <div className="px-8">
+    <section id="products" className="bg-background py-8 md:py-12">
+      <div className="px-4 md:px-8">
         
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="brutalist-subheading text-lg tracking-widest text-foreground mb-4">
+        <div className="text-center mb-8 md:mb-16">
+          <h2 className="brutalist-subheading text-base md:text-lg tracking-widest text-foreground mb-4">
             CATEGORIES
           </h2>
           <p className="brutalist-body text-xs tracking-wide text-gray-500">
@@ -142,7 +142,7 @@ const ProductCategories = () => {
         ) : (
           /* Categories Grid */
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-6 lg:gap-8">
               {categories.map((category) => {
                 const IconComponent = iconMap[category.iconName || 'Package'] || Package;
                 
@@ -156,28 +156,28 @@ const ProductCategories = () => {
                   <div className="bg-background border-0 hover:bg-gray-50 transition-colors duration-300">
                     
                     {/* Icon Container */}
-                    <div className="aspect-square bg-gray-100 flex items-center justify-center mb-6 group-hover:bg-gray-200 transition-colors duration-300">
+                    <div className="aspect-square bg-gray-100 flex items-center justify-center mb-4 md:mb-6 group-hover:bg-gray-200 transition-colors duration-300">
                       <IconComponent 
-                        className="w-12 h-12 text-gray-600 group-hover:text-gray-800 transition-colors duration-300"
+                        className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-gray-600 group-hover:text-gray-800 transition-colors duration-300"
                         strokeWidth={1}
                       />
                     </div>
                     
                     {/* Category Info */}
-                    <div className="text-center space-y-2">
-                      <h3 className="brutalist-body text-sm tracking-wider text-foreground group-hover:text-gray-500 transition-colors duration-300">
+                    <div className="text-center space-y-1 md:space-y-2">
+                      <h3 className="brutalist-body text-xs sm:text-sm tracking-wider text-foreground group-hover:text-gray-500 transition-colors duration-300">
                         {category.name}
                       </h3>
-                      <p className="brutalist-body text-xs tracking-wide text-gray-500">
+                      <p className="brutalist-body text-[10px] sm:text-xs tracking-wide text-gray-500 hidden sm:block">
                         {category.description}
                       </p>
-                      <p className="brutalist-body text-xs tracking-wide text-gray-400">
+                      <p className="brutalist-body text-[10px] sm:text-xs tracking-wide text-gray-400">
                         VIEW PRODUCTS
                       </p>
                     </div>
                     
                     {/* Hover Arrow */}
-                    <div className="flex justify-center mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="flex justify-center mt-2 md:mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <ArrowRight 
                         className="w-4 h-4 text-foreground" 
                         strokeWidth={1}

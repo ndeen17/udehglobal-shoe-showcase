@@ -98,13 +98,12 @@ const ProductCard = ({ product, id, image, title, price, category }: ProductCard
             />
           </Link>
           
-          {/* Action Buttons - Show on Hover */}
-          {isHovered && (
-            <div className="absolute top-2 right-2 flex flex-col space-y-2">
-              {/* Wishlist Button */}
-              <button
-                onClick={handleWishlistToggle}
-                className={`w-8 h-8 flex items-center justify-center transition-colors ${
+          {/* Action Buttons - Always visible on mobile, show on hover on desktop */}
+          <div className={`absolute top-2 right-2 flex flex-col space-y-2 ${isHovered ? 'opacity-100' : 'opacity-100 md:opacity-0'} transition-opacity`}>
+            {/* Wishlist Button */}
+            <button
+              onClick={handleWishlistToggle}
+              className={`w-10 h-10 md:w-8 md:h-8 flex items-center justify-center transition-colors ${
                   inWishlist 
                     ? 'bg-red-500 text-white' 
                     : 'bg-white bg-opacity-90 text-gray-700 hover:bg-red-500 hover:text-white'
@@ -118,16 +117,15 @@ const ProductCard = ({ product, id, image, title, price, category }: ProductCard
               </button>
               
               {/* Add to Cart Button */}
-              <button
-                onClick={handleAddToCart}
-                disabled={loading}
-                className="w-8 h-8 bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors disabled:opacity-50"
+            <button
+              onClick={handleAddToCart}
+              disabled={loading}
+              className="w-10 h-10 md:w-8 md:h-8 bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors disabled:opacity-50"
                 aria-label="Add to cart"
               >
-                <Plus className="w-4 h-4" strokeWidth={1.5} />
-              </button>
-            </div>
-          )}
+              <Plus className="w-4 h-4" strokeWidth={1.5} />
+            </button>
+          </div>
         </div>
         
         {/* Minimal Text Label */}
