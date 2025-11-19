@@ -149,27 +149,6 @@ const AdminLogin: React.FC = () => {
               )}
             </Button>
           </form>
-          
-          {/* Demo Credentials */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <h4 className="text-sm font-medium mb-2">Demo Credentials:</h4>
-            <div className="text-xs space-y-1">
-              <div>
-                <strong>Super Admin:</strong>
-                <br />
-                Email: admin@udehglobal.com
-                <br />
-                Password: admin123
-              </div>
-              <div className="mt-2">
-                <strong>Store Manager:</strong>
-                <br />
-                Email: manager@udehglobal.com
-                <br />
-                Password: manager123
-              </div>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </div>
