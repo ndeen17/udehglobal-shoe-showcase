@@ -97,7 +97,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onClose }) => {
     <div ref={searchRef} className="relative w-full max-w-2xl mx-auto">
       {/* Search Input */}
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <Search className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
         <input
           ref={inputRef}
           type="text"
@@ -105,13 +105,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ onClose }) => {
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="SEARCH PRODUCTS..."
-          className="w-full bg-white border border-gray-200 pl-12 pr-12 py-4 brutalist-body text-sm tracking-wider focus:outline-none focus:border-gray-400 transition-colors"
+          className="w-full bg-white border border-gray-200 pl-10 md:pl-12 pr-10 md:pr-12 py-3 md:py-4 brutalist-body text-sm tracking-wider focus:outline-none focus:border-gray-400 transition-colors mobile-input"
           autoComplete="off"
         />
         {query && (
           <button
             onClick={handleClear}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            className="absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
           >
             <X className="w-5 h-5" />
           </button>
@@ -120,12 +120,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ onClose }) => {
 
       {/* Search Results */}
       {isOpen && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 border-t-0 z-50 max-h-96 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 border-t-0 z-50 max-h-[70vh] md:max-h-96 overflow-y-auto smooth-scroll">
           {results.map((product, index) => (
             <Link
               key={product.id}
               to={`/product/${product.slug}`}
-              className={`flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 ${
+              className={`flex items-center gap-3 md:gap-4 p-3 md:p-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 min-h-[60px] ${
                 selectedIndex === index ? 'bg-gray-50' : ''
               }`}
               onClick={() => {
@@ -134,7 +134,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onClose }) => {
                 onClose?.();
               }}
             >
-              <div className="w-12 h-12 bg-gray-100 flex-shrink-0 overflow-hidden">
+              <div className="w-14 h-14 md:w-12 md:h-12 bg-gray-100 flex-shrink-0 overflow-hidden">
                 <img 
                   src={product.image} 
                   alt={product.name}

@@ -59,9 +59,9 @@ const SearchResults = () => {
     <div className="min-h-screen bg-background">
       {/* Header with Search */}
       <div className="border-b bg-white">
-        <div className="px-8 py-6">
+        <div className="px-4 md:px-8 py-4 md:py-6">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
               <Link 
                 to="/"
                 className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors"
@@ -74,8 +74,8 @@ const SearchResults = () => {
             <SearchBar />
             
             {query && (
-              <div className="mt-6">
-                <h1 className="brutalist-heading text-xl tracking-widest text-foreground mb-2">
+              <div className="mt-4 md:mt-6">
+                <h1 className="brutalist-heading text-base md:text-xl tracking-widest text-foreground mb-2">
                   SEARCH RESULTS
                 </h1>
                 <p className="brutalist-body text-sm tracking-wide text-gray-500">
@@ -90,9 +90,9 @@ const SearchResults = () => {
       {/* Filters and Controls */}
       {searchResults.length > 0 && (
         <div className="border-b">
-          <div className="px-8 py-4">
-            <div className="max-w-7xl mx-auto flex items-center justify-between">
-              <div className="flex items-center gap-4">
+          <div className="px-4 md:px-8 py-3 md:py-4">
+            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="flex flex-wrap items-center gap-2 md:gap-4">
                 <Button
                   variant="outline"
                   size="sm"

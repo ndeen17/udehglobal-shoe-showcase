@@ -73,9 +73,9 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background pt-20">
+    <div className="min-h-screen bg-background pt-16 md:pt-20">
       {/* Back Navigation */}
-      <div className="px-8 pt-8">
+      <div className="px-4 md:px-8 pt-4 md:pt-8">
         <Link 
           to="/"
           className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300"
@@ -85,12 +85,12 @@ const Dashboard = () => {
         </Link>
       </div>
 
-      <div className="px-8 py-16">
+      <div className="px-4 md:px-8 py-8 md:py-16">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="flex items-center justify-between mb-12">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 md:mb-12">
             <div>
-              <h1 className="brutalist-heading text-lg tracking-widest text-foreground mb-2">
+              <h1 className="brutalist-heading text-base md:text-lg tracking-widest text-foreground mb-2">
                 MY ACCOUNT
               </h1>
               <p className="brutalist-body text-sm tracking-wide text-gray-500">

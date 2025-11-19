@@ -190,7 +190,7 @@ const Profile = () => {
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="brutalist-heading text-2xl tracking-widest mb-2">MY ACCOUNT</h1>
+                    <h1 className="brutalist-heading text-xl md:text-2xl tracking-widest text-foreground mb-4">MY ACCOUNT</h1>
           <p className="brutalist-body text-sm tracking-wide text-gray-500">
             Manage your profile and account settings
           </p>
