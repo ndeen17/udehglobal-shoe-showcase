@@ -38,6 +38,8 @@ export interface Product {
   tags: string[];
   seoTitle?: string;
   seoDescription?: string;
+  averageRating: number;
+  reviewCount: number;
   createdAt: string;
   updatedAt: string;
 }

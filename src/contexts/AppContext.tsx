@@ -10,20 +10,6 @@ interface WishlistItem {
   addedAt: Date;
 }
 
-interface Review {
-  id: string;
-  productId: string; // MongoDB ObjectId format  
-  userId: string;
-  userName: string;
-  userAvatar?: string;
-  rating: number;
-  title: string;
-  comment: string;
-  createdAt: Date;
-  verified: boolean;
-  helpful: number;
-}
-
 interface AppContextType {
   // Wishlist state (local storage only - not implemented in backend)
   wishlistItems: WishlistItem[];
@@ -32,14 +18,6 @@ interface AppContextType {
   removeFromWishlist: (id: string) => void;
   clearWishlist: () => void;
   isInWishlist: (id: string) => boolean;
-  
-  // Reviews state (local storage only - not implemented in backend)
-  reviews: Review[];
-  addReview: (review: Omit<Review, 'id' | 'createdAt' | 'helpful'>) => void;
-  getProductReviews: (productId: string) => Review[];
-  getAverageRating: (productId: string) => number;
-  getRatingCounts: (productId: string) => { [key: number]: number };
-  markReviewHelpful: (reviewId: string) => void;
   
   // Navigation state
   isNavOpen: boolean;
@@ -66,14 +44,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     return saved ? JSON.parse(saved) : [];
   });
   
-  // Reviews state (local storage since backend doesn't have reviews yet)
-  const [reviews, setReviews] = useState<Review[]>(() => {
-    const saved = localStorage.getItem('udeh-reviews');
-    return saved ? JSON.parse(saved).map((review: any) => ({
-      ...review,
-      createdAt: new Date(review.createdAt)
-    })) : [];
-  });
+
   
   // Navigation state
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -108,58 +79,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     return wishlistItems.some(item => item.id === id);
   };
 
-  // Review functions (local storage since backend doesn't have reviews)
-  const addReview = (review: Omit<Review, 'id' | 'createdAt' | 'helpful'>) => {
-    const newReview: Review = {
-      ...review,
-      id: Date.now().toString(),
-      createdAt: new Date(),
-      helpful: 0
-    };
-    
-    setReviews(prev => {
-      const updated = [...prev, newReview];
-      localStorage.setItem('udeh-reviews', JSON.stringify(updated));
-      return updated;
-    });
-  };
 
-  const getProductReviews = (productId: string) => {
-    return reviews
-      .filter(review => review.productId === productId)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-  };
-
-  const getAverageRating = (productId: string) => {
-    const productReviews = getProductReviews(productId);
-    if (productReviews.length === 0) return 0;
-    
-    const sum = productReviews.reduce((acc, review) => acc + review.rating, 0);
-    return sum / productReviews.length;
-  };
-
-  const getRatingCounts = (productId: string) => {
-    const productReviews = getProductReviews(productId);
-    const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-    
-    productReviews.forEach(review => {
-      counts[review.rating as keyof typeof counts]++;
-    });
-    
-    return counts;
-  };
-
-  const markReviewHelpful = (reviewId: string) => {
-    setReviews(prev => {
-      const updated = prev.map(review => 
-        review.id === reviewId 
-          ? { ...review, helpful: review.helpful + 1 }
-          : review
-      );
-      localStorage.setItem('udeh-reviews', JSON.stringify(updated));
-      return updated;
-    });
-  };
 
   // Navigation functions
   const toggleNav = () => setIsNavOpen(prev => !prev);
@@ -193,12 +113,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     removeFromWishlist,
     clearWishlist,
     isInWishlist,
-    reviews,
-    addReview,
-    getProductReviews,
-    getAverageRating,
-    getRatingCounts,
-    markReviewHelpful,
     isNavOpen,
     toggleNav,
     closeNav,
@@ -222,4 +136,4 @@ export const useApp = () => {
 };
 
 // Export types
-export type { WishlistItem, Review };
+export type { WishlistItem };

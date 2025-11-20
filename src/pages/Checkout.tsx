@@ -1,17 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CreditCard, Truck, Shield, Lock, CheckCircle } from 'lucide-react';
-import { useApp } from '@/contexts/AppContext';
+import { ArrowLeft, CreditCard, Truck, Shield, Lock, CheckCircle, LogIn, UserPlus } from 'lucide-react';
+import { useCart } from '@/hooks/useCart';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 const Checkout = () => {
-  const { cartItems, cartCount, clearCart } = useApp();
+  const { cart, clearCart } = useCart();
+  const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
+  
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   
   const [step, setStep] = useState<'shipping' | 'payment' | 'review' | 'success'>('shipping');
   const [shippingData, setShippingData] = useState({
@@ -24,6 +35,13 @@ const Checkout = () => {
     state: '',
     zipCode: '',
   });
+
+  // Check authentication when component mounts
+  useEffect(() => {
+    if (!isAuthenticated && cart && cart.items.length > 0) {
+      setShowAuthPrompt(true);
+    }
+  }, [isAuthenticated, cart]);
   
   const [paymentData, setPaymentData] = useState({
     method: 'card',
@@ -33,14 +51,22 @@ const Checkout = () => {
     nameOnCard: '',
   });
 
-  const subtotal = cartItems.reduce((sum, item) => {
-    const price = parseFloat(item.price.replace('₦', '').replace(',', ''));
-    return sum + (price * item.quantity);
-  }, 0);
+  const cartItems = cart?.items || [];
+  const cartCount = cart?.itemCount || 0;
+  const subtotal = cart?.totalAmount || 0;
 
   const shipping = subtotal > 50000 ? 0 : 2000;
   const tax = subtotal * 0.075;
   const total = subtotal + shipping + tax;
+
+  const handleAuthRedirect = (path: '/login' | '/signup') => {
+    // Save checkout state to localStorage
+    if (cart && cart.items.length > 0) {
+      localStorage.setItem('checkout-redirect', 'true');
+      localStorage.setItem('checkout-progress', JSON.stringify(shippingData));
+    }
+    navigate(`${path}?redirect=/checkout`);
+  };
 
   const handleShippingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,13 +78,32 @@ const Checkout = () => {
     setStep('review');
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     // Simulate order processing
-    setTimeout(() => {
-      clearCart();
+    setTimeout(async () => {
+      await clearCart();
+      // Clear checkout progress
+      localStorage.removeItem('checkout-redirect');
+      localStorage.removeItem('checkout-progress');
       setStep('success');
     }, 1500);
   };
+
+  // Restore checkout progress if returning from auth
+  useEffect(() => {
+    const checkoutRedirect = localStorage.getItem('checkout-redirect');
+    const savedProgress = localStorage.getItem('checkout-progress');
+    
+    if (checkoutRedirect && savedProgress && isAuthenticated) {
+      try {
+        const progress = JSON.parse(savedProgress);
+        setShippingData(progress);
+        localStorage.removeItem('checkout-redirect');
+      } catch (error) {
+        console.error('Failed to restore checkout progress:', error);
+      }
+    }
+  }, [isAuthenticated]);
 
   if (cartCount === 0 && step !== 'success') {
     return (
@@ -77,6 +122,56 @@ const Checkout = () => {
       </div>
     );
   }
+
+  // Authentication prompt modal
+  const AuthPromptModal = () => (
+    <Dialog open={showAuthPrompt} onOpenChange={setShowAuthPrompt}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="brutalist-heading text-base tracking-widest">
+            SIGN IN TO CONTINUE
+          </DialogTitle>
+          <DialogDescription className="text-sm text-gray-600 mt-2">
+            Please sign in or create an account to proceed with checkout. Your cart will be saved and ready when you return.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="space-y-3 mt-6">
+          <Button
+            onClick={() => handleAuthRedirect('/login')}
+            className="w-full bg-black text-white hover:bg-gray-800 h-11"
+          >
+            <LogIn className="w-4 h-4 mr-2" />
+            SIGN IN
+          </Button>
+          
+          <Button
+            onClick={() => handleAuthRedirect('/signup')}
+            variant="outline"
+            className="w-full h-11"
+          >
+            <UserPlus className="w-4 h-4 mr-2" />
+            CREATE ACCOUNT
+          </Button>
+          
+          <Button
+            onClick={() => setShowAuthPrompt(false)}
+            variant="ghost"
+            className="w-full text-sm text-gray-500"
+          >
+            Maybe later
+          </Button>
+        </div>
+
+        <div className="mt-4 p-3 bg-gray-50 rounded text-xs text-gray-600">
+          <p className="flex items-center gap-2">
+            <Shield className="w-3 h-3" />
+            Your cart items ({cartCount}) will be preserved
+          </p>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 
   if (step === 'success') {
     return (
@@ -104,9 +199,12 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pt-20">
-      {/* Back Navigation */}
-      <div className="px-4 md:px-8 pt-4 md:pt-8">
+    <>
+      <AuthPromptModal />
+      
+      <div className="min-h-screen bg-background pt-20">
+        {/* Back Navigation */}
+        <div className="px-4 md:px-8 pt-4 md:pt-8">
         <Link 
           to="/cart"
           className="inline-flex items-center space-x-2 brutalist-body text-sm tracking-wider text-gray-500 hover:text-foreground transition-colors duration-300 py-2"
@@ -411,16 +509,26 @@ const Checkout = () => {
                     <div>
                       <h3 className="text-sm tracking-wide text-gray-600 mb-4">ORDER ITEMS:</h3>
                       <div className="space-y-4">
-                        {cartItems.map((item) => (
-                          <div key={item.id} className="flex items-center gap-4 bg-gray-50 p-4">
-                            <img src={item.image} alt={item.title} className="w-16 h-16 object-cover" />
-                            <div className="flex-1">
-                              <p className="text-sm font-medium">{item.title}</p>
-                              <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                        {cartItems.map((item) => {
+                          const imageUrl = typeof item.product.images?.[0] === 'string' 
+                            ? item.product.images[0] 
+                            : item.product.images?.[0]?.url || '/placeholder-image.jpg';
+                          
+                          return (
+                            <div key={item._id} className="flex items-center gap-4 bg-gray-50 p-4">
+                              <img 
+                                src={imageUrl} 
+                                alt={item.product.name} 
+                                className="w-16 h-16 object-cover" 
+                              />
+                              <div className="flex-1">
+                                <p className="text-sm font-medium">{item.product.name}</p>
+                                <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                              </div>
+                              <p className="text-sm font-medium">₦{item.totalPrice.toLocaleString()}</p>
                             </div>
-                            <p className="text-sm font-medium">{item.price}</p>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
 
@@ -491,7 +599,8 @@ const Checkout = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

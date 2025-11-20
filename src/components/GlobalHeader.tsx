@@ -40,23 +40,15 @@ const GlobalHeader = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger className="p-2 hover:bg-transparent transition-none min-w-[44px] min-h-[44px] flex items-center justify-center">
                   <div className="flex items-center space-x-2">
-                    {user?.avatar ? (
-                      <img 
-                        src={user.avatar} 
-                        alt={user.name}
-                        className="w-6 h-6 rounded-full object-cover"
-                      />
-                    ) : (
-                      <User 
-                        className="w-5 h-5 md:w-4 md:h-4 text-foreground" 
-                        strokeWidth={1}
-                      />
-                    )}
+                    <User 
+                      className="w-5 h-5 md:w-4 md:h-4 text-foreground" 
+                      strokeWidth={1}
+                    />
                   </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="center" className="w-48">
                   <div className="px-2 py-2 border-b border-gray-200">
-                    <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+                    <p className="text-sm font-medium text-gray-900">{user?.firstName} {user?.lastName}</p>
                     <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                   </div>
                   <DropdownMenuItem asChild>

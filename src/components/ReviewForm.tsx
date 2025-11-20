@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useApp } from '@/contexts/AppContext';
+import { reviewsAPI, Review } from '@/services/api';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,14 +11,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import StarRating from './StarRating';
 
 interface ReviewFormProps {
-  productId: number;
+  productId: string;
   productName: string;
   trigger: React.ReactNode;
+  existingReview?: Review | null;
+  onReviewSubmitted?: () => void;
 }
 
-const ReviewForm = ({ productId, productName, trigger }: ReviewFormProps) => {
+const ReviewForm = ({ productId, productName, trigger, existingReview, onReviewSubmitted }: ReviewFormProps) => {
   const { user, isAuthenticated } = useAuth();
-  const { addReview } = useApp();
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     rating: 0,
@@ -25,42 +28,96 @@ const ReviewForm = ({ productId, productName, trigger }: ReviewFormProps) => {
     comment: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isEditing = !!existingReview;
+
+  // Initialize form with existing review data
+  useEffect(() => {
+    if (existingReview) {
+      setFormData({
+        rating: existingReview.rating,
+        title: existingReview.title || '',
+        comment: existingReview.comment
+      });
+    }
+  }, [existingReview]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!isAuthenticated || !user) {
-      alert('Please sign in to leave a review');
+      toast({
+        title: 'Authentication required',
+        description: 'Please sign in to leave a review',
+        variant: 'destructive'
+      });
       return;
     }
 
     if (formData.rating === 0) {
-      alert('Please select a rating');
+      toast({
+        title: 'Rating required',
+        description: 'Please select a rating',
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    if (formData.comment.trim().length < 10) {
+      toast({
+        title: 'Comment too short',
+        description: 'Please write at least 10 characters',
+        variant: 'destructive'
+      });
       return;
     }
 
     setIsSubmitting(true);
     
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
+      if (isEditing && existingReview) {
+        // Update existing review
+        await reviewsAPI.updateReview(existingReview._id, {
+          rating: formData.rating,
+          title: formData.title.trim() || undefined,
+          comment: formData.comment.trim()
+        });
+        
+        toast({
+          title: 'Review updated',
+          description: 'Your review has been updated successfully'
+        });
+      } else {
+        // Create new review
+        await reviewsAPI.createReview(productId, {
+          rating: formData.rating,
+          title: formData.title.trim() || undefined,
+          comment: formData.comment.trim()
+        });
+        
+        toast({
+          title: 'Review submitted',
+          description: 'Thank you for your review!'
+        });
+      }
       
-      addReview({
-        productId,
-        userId: user.id,
-        userName: user.name,
-        userAvatar: user.avatar,
-        rating: formData.rating,
-        title: formData.title,
-        comment: formData.comment,
-        verified: true // Mock verification
-      });
+      // Reset form if creating new
+      if (!isEditing) {
+        setFormData({ rating: 0, title: '', comment: '' });
+      }
       
-      // Reset form
-      setFormData({ rating: 0, title: '', comment: '' });
       setIsOpen(false);
-    } catch (error) {
-      alert('Failed to submit review. Please try again.');
+      
+      // Notify parent to refresh reviews
+      if (onReviewSubmitted) {
+        onReviewSubmitted();
+      }
+    } catch (error: any) {
+      console.error('Submit review error:', error);
+      toast({
+        title: 'Failed to submit review',
+        description: error.message || 'Please try again later',
+        variant: 'destructive'
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -99,10 +156,10 @@ const ReviewForm = ({ productId, productName, trigger }: ReviewFormProps) => {
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="brutalist-heading text-sm tracking-wider">
-            WRITE A REVIEW
+            {isEditing ? 'EDIT YOUR REVIEW' : 'WRITE A REVIEW'}
           </DialogTitle>
           <p className="text-sm text-gray-600">
-            Share your experience with {productName}
+            {isEditing ? 'Update your review for' : 'Share your experience with'} {productName}
           </p>
         </DialogHeader>
         
@@ -152,10 +209,11 @@ const ReviewForm = ({ productId, productName, trigger }: ReviewFormProps) => {
               placeholder="Tell others about your experience with this product..."
               className="mt-2 min-h-[100px]"
               required
-              maxLength={500}
+              minLength={10}
+              maxLength={1000}
             />
             <p className="text-xs text-gray-500 mt-1">
-              {formData.comment.length}/500 characters
+              {formData.comment.length}/1000 characters (minimum 10)
             </p>
           </div>
 
@@ -172,9 +230,9 @@ const ReviewForm = ({ productId, productName, trigger }: ReviewFormProps) => {
             <Button 
               type="submit"
               className="bg-black text-white hover:bg-gray-800"
-              disabled={isSubmitting || formData.rating === 0}
+              disabled={isSubmitting || formData.rating === 0 || formData.comment.trim().length < 10}
             >
-              {isSubmitting ? 'SUBMITTING...' : 'SUBMIT REVIEW'}
+              {isSubmitting ? (isEditing ? 'UPDATING...' : 'SUBMITTING...') : (isEditing ? 'UPDATE REVIEW' : 'SUBMIT REVIEW')}
             </Button>
           </div>
         </form>

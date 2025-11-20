@@ -144,7 +144,7 @@ export const productsAPI = {
     return response.data;
   },
 
-  // Search products
+  // Search products with advanced filters
   searchProducts: async (
     query: string,
     params: {
@@ -152,12 +152,20 @@ export const productsAPI = {
       limit?: number;
       category?: string;
       sortBy?: string;
+      minPrice?: number;
+      maxPrice?: number;
+      minRating?: number;
+      inStock?: boolean;
     } = {}
   ): Promise<{
     products: Product[];
     total: number;
     pages: number;
     currentPage: number;
+    filters?: {
+      categories: Array<{ name: string; slug: string }>;
+      priceRange: { minPrice: number; maxPrice: number };
+    };
   }> => {
     const queryParams = new URLSearchParams({ q: query });
     
@@ -168,6 +176,19 @@ export const productsAPI = {
     });
     
     const response = await makeApiCall(`/products/search?${queryParams.toString()}`);
+    return response.data;
+  },
+
+  // Get search suggestions/autocomplete
+  getSearchSuggestions: async (query: string, limit: number = 10): Promise<{
+    products: Array<{ type: string; text: string; value: string }>;
+    categories: Array<{ type: string; text: string; value: string }>;
+    tags: Array<{ type: string; text: string; value: string }>;
+  }> => {
+    if (!query || query.length < 2) {
+      return { products: [], categories: [], tags: [] };
+    }
+    const response = await makeApiCall(`/products/suggestions?q=${encodeURIComponent(query)}&limit=${limit}`);
     return response.data;
   },
 
@@ -262,20 +283,12 @@ export const cartAPI = {
 // Auth API
 export const authAPI = {
   // Login
-  login: async (email: string, password: string): Promise<{
-    user: User;
-    token: string;
-  }> => {
+  login: async (email: string, password: string) => {
     const response = await makeApiCall('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password })
     });
-    
-    if (response.success && response.data.token) {
-      localStorage.setItem('user_token', response.data.token);
-    }
-    
-    return response.data;
+    return response;
   },
 
   // Register
@@ -285,20 +298,12 @@ export const authAPI = {
     email: string;
     password: string;
     phone?: string;
-  }): Promise<{
-    user: User;
-    token: string;
-  }> => {
+  }) => {
     const response = await makeApiCall('/auth/register', {
       method: 'POST',
       body: JSON.stringify(userData)
     });
-    
-    if (response.success && response.data.token) {
-      localStorage.setItem('user_token', response.data.token);
-    }
-    
-    return response.data;
+    return response;
   },
 
   // Logout
@@ -306,7 +311,7 @@ export const authAPI = {
     await makeApiCall('/auth/logout', {
       method: 'POST'
     });
-    localStorage.removeItem('user_token');
+    localStorage.removeItem('authToken');
   },
 
   // Refresh token
@@ -472,11 +477,131 @@ export const usersAPI = {
   }
 };
 
+// Review interface
+export interface Review {
+  _id: string;
+  user: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+  product: string;
+  rating: number;
+  title?: string;
+  comment: string;
+  helpful: number;
+  helpfulBy: string[];
+  verifiedPurchase: boolean;
+  isApproved: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Reviews API
+export const reviewsAPI = {
+  // Get reviews for a product
+  getProductReviews: async (
+    productId: string,
+    params: {
+      sort?: 'newest' | 'oldest' | 'rating-high' | 'rating-low' | 'helpful';
+      rating?: number;
+      page?: number;
+      limit?: number;
+      verified?: boolean;
+    } = {}
+  ): Promise<{
+    reviews: Review[];
+    pagination: {
+      currentPage: number;
+      totalPages: number;
+      totalReviews: number;
+      limit: number;
+    };
+    summary: {
+      averageRating: number;
+      totalReviews: number;
+      ratingDistribution: { [key: number]: number };
+    };
+  }> => {
+    const queryParams = new URLSearchParams();
+    
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        queryParams.append(key, value.toString());
+      }
+    });
+    
+    const response = await makeApiCall(`/products/${productId}/reviews?${queryParams.toString()}`);
+    return response.data;
+  },
+
+  // Get user's review for a product
+  getUserProductReview: async (productId: string): Promise<{
+    review: Review | null;
+    hasPurchased: boolean;
+  }> => {
+    const response = await makeApiCall(`/products/${productId}/reviews/me`);
+    return response.data;
+  },
+
+  // Create a review
+  createReview: async (
+    productId: string,
+    data: {
+      rating: number;
+      title?: string;
+      comment: string;
+    }
+  ): Promise<Review> => {
+    const response = await makeApiCall(`/products/${productId}/reviews`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+    return response.data;
+  },
+
+  // Update a review
+  updateReview: async (
+    reviewId: string,
+    data: {
+      rating: number;
+      title?: string;
+      comment: string;
+    }
+  ): Promise<Review> => {
+    const response = await makeApiCall(`/reviews/${reviewId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+    return response.data;
+  },
+
+  // Delete a review
+  deleteReview: async (reviewId: string): Promise<void> => {
+    await makeApiCall(`/reviews/${reviewId}`, {
+      method: 'DELETE'
+    });
+  },
+
+  // Mark review as helpful
+  markReviewHelpful: async (reviewId: string): Promise<{
+    helpful: number;
+    hasMarked: boolean;
+  }> => {
+    const response = await makeApiCall(`/reviews/${reviewId}/helpful`, {
+      method: 'POST'
+    });
+    return response.data;
+  }
+};
+
 export default {
   categoriesAPI,
   productsAPI,
   cartAPI,
   authAPI,
   ordersAPI,
-  usersAPI
+  usersAPI,
+  reviewsAPI
 };

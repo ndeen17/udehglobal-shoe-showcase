@@ -4,18 +4,69 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "@/contexts/AppContext";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { CartProvider } from "@/hooks/useCart";
 import { AdminAuthProvider } from "@/admin/context/AdminAuthContext";
 import GlobalHeader from "@/components/GlobalHeader";
 import ChatSupport from "@/components/ChatSupport";
+import EmailVerificationBanner from "@/components/EmailVerificationBanner";
+import { useState } from "react";
+
+const MainAppRoutes = () => {
+  const { user } = useAuth();
+  const [showBanner, setShowBanner] = useState(true);
+  const shouldShowBanner = user && !user.emailVerified && showBanner;
+
+  return (
+    <>
+      {shouldShowBanner && (
+        <EmailVerificationBanner 
+          email={user.email} 
+          onDismiss={() => setShowBanner(false)} 
+        />
+      )}
+      <GlobalHeader />
+      <ChatSupport />
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/category/:slug" element={<CategoryPage />} />
+        <Route path="/item/:slug" element={<ProductDetail />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/search" element={<SearchResults />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/verify-email/:token" element={<VerifyEmail />} />
+        <Route path="/resend-verification" element={<ResendVerification />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/addresses" element={<Addresses />} />
+        <Route path="/orders" element={<OrderHistory />} />
+        <Route path="/orders/:orderId" element={<OrderDetails />} />
+        <Route path="/payment/success" element={<PaymentSuccess />} />
+        <Route path="/payment/failed" element={<PaymentFailed />} />
+        <Route path="/products" element={<CategoryPage />} />
+        <Route path="/info" element={<About />} />
+        <Route path="/account" element={<Profile />} />
+        <Route path="/history" element={<OrderHistory />} />
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
+  );
+};
 import Index from "./pages/Index";
 import CategoryPage from "./pages/CategoryPage";
 import ProductDetail from "./pages/ProductDetail";
 import CartPage from "./pages/CartPage.tsx";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import SearchResults from "./pages/SearchResults";
+import SearchResults from "./pages/EnhancedSearchResults";
 import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -27,6 +78,8 @@ import OrderHistory from "./pages/OrderHistory";
 import OrderDetails from "./pages/OrderDetails";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import VerifyEmail from "./pages/VerifyEmail";
+import ResendVerification from "./pages/ResendVerification";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailed from "./pages/PaymentFailed";
 import NotFound from "./pages/NotFound";
@@ -71,40 +124,7 @@ const App = () => (
                   </Route>
                   
                   {/* Main App Routes */}
-                  <Route path="/*" element={
-                    <>
-                      <GlobalHeader />
-                      <ChatSupport />
-                      <Routes>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/category/:slug" element={<CategoryPage />} />
-                        <Route path="/item/:slug" element={<ProductDetail />} />
-                        <Route path="/cart" element={<CartPage />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/contact" element={<Contact />} />
-                        <Route path="/search" element={<SearchResults />} />
-                        <Route path="/checkout" element={<Checkout />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/signup" element={<Signup />} />
-                        <Route path="/forgot-password" element={<ForgotPassword />} />
-                        <Route path="/reset-password/:token" element={<ResetPassword />} />
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/wishlist" element={<Wishlist />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="/addresses" element={<Addresses />} />
-                        <Route path="/orders" element={<OrderHistory />} />
-                        <Route path="/orders/:orderId" element={<OrderDetails />} />
-                        <Route path="/payment/success" element={<PaymentSuccess />} />
-                        <Route path="/payment/failed" element={<PaymentFailed />} />
-                        <Route path="/products" element={<CategoryPage />} />
-                        <Route path="/info" element={<About />} />
-                        <Route path="/account" element={<Profile />} />
-                        <Route path="/history" element={<OrderHistory />} />
-                        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </>
-                  } />
+                  <Route path="/*" element={<MainAppRoutes />} />
                 </Routes>
               </BrowserRouter>
             </AppProvider>

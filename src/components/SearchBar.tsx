@@ -105,7 +105,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onClose }) => {
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="SEARCH PRODUCTS..."
-          className="w-full bg-white border border-gray-200 pl-10 md:pl-12 pr-10 md:pr-12 py-3 md:py-4 brutalist-body text-sm tracking-wider focus:outline-none focus:border-gray-400 transition-colors mobile-input"
+          className="w-full bg-white border border-gray-200 rounded-full pl-10 md:pl-12 pr-10 md:pr-12 py-3 md:py-4 brutalist-body text-sm tracking-wider focus:outline-none focus:border-gray-400 transition-colors mobile-input"
           autoComplete="off"
         />
         {query && (
@@ -120,7 +120,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onClose }) => {
 
       {/* Search Results */}
       {isOpen && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 border-t-0 z-50 max-h-[70vh] md:max-h-96 overflow-y-auto smooth-scroll">
+        <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-2xl mt-2 z-50 max-h-[70vh] md:max-h-96 overflow-y-auto smooth-scroll shadow-lg">
           {results.map((product, index) => (
             <Link
               key={product.id}
@@ -176,7 +176,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onClose }) => {
 
       {/* No Results */}
       {isOpen && query.trim().length > 1 && results.length === 0 && (
-        <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 border-t-0 z-50 p-8 text-center">
+        <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-2xl mt-2 z-50 p-8 text-center shadow-lg">
           <p className="brutalist-body text-sm tracking-wider text-gray-500">
             NO PRODUCTS FOUND FOR "{query.toUpperCase()}"
           </p>

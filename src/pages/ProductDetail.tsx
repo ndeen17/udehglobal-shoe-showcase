@@ -14,7 +14,7 @@ import { getProductId, getProductImageUrl, getProductName, getProductPrice, getP
 
 const ProductDetail = () => {
   const { slug } = useParams();
-  const { addToWishlist, removeFromWishlist, isInWishlist, getAverageRating, getProductReviews } = useApp();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useApp();
   const { addToCart, loading: cartLoading } = useCart();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -196,12 +196,12 @@ const ProductDetail = () => {
               {/* Rating */}
               <div className="flex items-center gap-2">
                 <StarRating 
-                  rating={getAverageRating(getProductId(product))} 
+                  rating={product.averageRating || 0} 
                   size="sm" 
                   interactive={false}
                 />
                 <span className="brutalist-body text-xs tracking-wide text-gray-500">
-                  {getAverageRating(getProductId(product)).toFixed(1)} ({getProductReviews(getProductId(product)).length} REVIEWS)
+                  {(product.averageRating || 0).toFixed(1)} ({product.reviewCount || 0} REVIEWS)
                 </span>
               </div>
 

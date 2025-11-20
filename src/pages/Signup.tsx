@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { ArrowLeft, Eye, EyeOff, Mail, Lock, User, Phone, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/hooks/useCart';
+import { useToast } from '@/hooks/use-toast';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -24,8 +25,12 @@ const Signup = () => {
   const [acceptTerms, setAcceptTerms] = useState(false);
   
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const [searchParams] = useSearchParams();
+  const { register } = useAuth();
   const { mergeGuestCart } = useCart();
+  const { toast } = useToast();
+  
+  const redirectPath = searchParams.get('redirect') || '/';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +44,12 @@ const Signup = () => {
       return;
     }
     
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters');
+      setIsLoading(false);
+      return;
+    }
+    
     if (!acceptTerms) {
       setError('Please accept the terms and conditions');
       setIsLoading(false);
@@ -46,51 +57,44 @@ const Signup = () => {
     }
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock successful signup
-      login({
-        id: '3',
-        name: `${formData.firstName} ${formData.lastName}`,
+      // Call real backend API
+      await register({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         email: formData.email,
-        avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face'
+        phone: formData.phone,
+        password: formData.password,
       });
 
       // Merge guest cart with new account
       try {
         await mergeGuestCart();
+        
+        // Show success toast if cart was merged
+        if (redirectPath === '/checkout') {
+          toast({
+            title: "Account created!",
+            description: "Your cart is ready for checkout.",
+          });
+        }
       } catch (mergeError) {
         console.error('Failed to merge guest cart:', mergeError);
         // Don't block signup if merge fails
       }
       
-      navigate('/');
-    } catch (err) {
-      setError('Something went wrong. Please try again.');
+      // Show success message and redirect
+      navigate(redirectPath === '/' ? '/?welcome=true' : redirectPath);
+    } catch (err: any) {
+      console.error('Registration error:', err);
+      setError(err.message || 'Registration failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleGoogleSignup = async () => {
-    // Mock Google OAuth
-    login({
-      id: '4',
-      name: 'Google User',
-      email: 'newuser@gmail.com',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face'
-    });
-
-    // Merge guest cart with new account
-    try {
-      await mergeGuestCart();
-    } catch (mergeError) {
-      console.error('Failed to merge guest cart:', mergeError);
-      // Don't block signup if merge fails
-    }
-
-    navigate('/');
+    // TODO: Implement Google OAuth when ready
+    setError('Google signup coming soon. Please use email registration.');
   };
 
   return (
@@ -117,6 +121,23 @@ const Signup = () => {
               Join us for the best shopping experience
             </p>
           </div>
+
+          {/* Checkout Notice */}
+          {redirectPath === '/checkout' && (
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded">
+              <div className="flex items-start gap-3">
+                <ShoppingCart className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium text-blue-900">
+                    Create account to complete your purchase
+                  </p>
+                  <p className="text-xs text-blue-700 mt-1">
+                    Your cart items will be saved and ready for checkout
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Signup Form */}
           <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">

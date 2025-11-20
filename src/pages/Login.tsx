@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { ArrowLeft, Eye, EyeOff, Mail, Lock, User, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/hooks/useCart';
+import { useToast } from '@/hooks/use-toast';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -18,8 +19,12 @@ const Login = () => {
   const [error, setError] = useState('');
   
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { login } = useAuth();
   const { mergeGuestCart } = useCart();
+  const { toast } = useToast();
+  
+  const redirectPath = searchParams.get('redirect') || '/';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,51 +32,38 @@ const Login = () => {
     setError('');
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock successful login
-      login({
-        id: '1',
-        name: 'John Doe',
-        email: formData.email,
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'
-      });
+      // Call real backend API
+      await login(formData.email, formData.password);
 
       // Merge guest cart with authenticated cart
       try {
         await mergeGuestCart();
+        
+        // Show success toast if cart was merged
+        if (redirectPath === '/checkout') {
+          toast({
+            title: "Cart preserved!",
+            description: "Your items are ready for checkout.",
+          });
+        }
       } catch (mergeError) {
         console.error('Failed to merge guest cart:', mergeError);
         // Don't block login if merge fails
       }
       
-      navigate('/');
-    } catch (err) {
-      setError('Invalid email or password');
+      // Redirect to original destination or home
+      navigate(redirectPath);
+    } catch (err: any) {
+      console.error('Login error:', err);
+      setError(err.message || 'Invalid email or password. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
-    // Mock Google OAuth
-    login({
-      id: '2',
-      name: 'Google User',
-      email: 'user@gmail.com',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face'
-    });
-
-    // Merge guest cart with authenticated cart
-    try {
-      await mergeGuestCart();
-    } catch (mergeError) {
-      console.error('Failed to merge guest cart:', mergeError);
-      // Don't block login if merge fails
-    }
-
-    navigate('/');
+    // TODO: Implement Google OAuth when ready
+    setError('Google login coming soon. Please use email/password.');
   };
 
   return (
@@ -98,6 +90,23 @@ const Login = () => {
               Welcome back to your account
             </p>
           </div>
+
+          {/* Checkout Notice */}
+          {redirectPath === '/checkout' && (
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded">
+              <div className="flex items-start gap-3">
+                <ShoppingCart className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium text-blue-900">
+                    Sign in to complete your purchase
+                  </p>
+                  <p className="text-xs text-blue-700 mt-1">
+                    Your cart items will be ready when you return to checkout
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
