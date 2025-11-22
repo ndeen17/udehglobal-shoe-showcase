@@ -5,17 +5,13 @@ const Hero = () => {
     <section className="min-h-screen bg-background text-foreground pt-16 md:pt-20">
       <div className="grid lg:grid-cols-[45%_55%] lg:min-h-[85vh] min-h-[calc(100vh-4rem)] gap-0">
         
-        {/* Left Side - Video Background */}
+        {/* Left Side - Hero Image */}
         <div className="relative h-[45vh] sm:h-[50vh] lg:h-[85vh] order-2 lg:order-1 overflow-hidden bg-gray-900">
-          <video 
-            autoPlay 
-            muted 
-            loop 
-            playsInline
+          <img 
+            src="/sam.jpeg" 
+            alt="UDEH Global" 
             className="w-full h-full object-cover object-top"
-          >
-            <source src="/instaget.mp4" type="video/mp4" />
-          </video>
+          />
         </div>
 
         {/* Right Side - Content */}
